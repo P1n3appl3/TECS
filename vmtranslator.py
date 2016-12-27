@@ -133,13 +133,13 @@ class CodeWriter:
                 self.f.write("\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n")
 
     def close(self):
-        self.f.write("(END)\n@END\n0;JMP\n(EQLBL)\n@R13\nD=M\n@TRUELBL\nD;JEQ\n@FALSELBL\n0;JMP\n(GTLBL)\n@R13\nD=M\n@TRUELBL\nD;JGT\n@FALSELBL\n0;JMP\n(LTLBL)\n@R13\nD=M\n@TRUELBL\nD;JLT\n@FALSELBL\n0;JMP\n(TRUELBL)\n@SP\nA=M-1\nM=-1\n@14\nA=M\n0;JMP\n(FALSELBL)\n@SP\nA=M-1\nM=0\n@14\nA=M\n0;JMP\n(RETURNLBL)\n@SP\nA=M-1\nD=M\n@ARG\nM=D\n@D=A\n@SP\nM=D\n@LCL\nAM=M-1\nD=M\n@THAT\nM=D\n@LCL\nAM=M-1\nD=M\n@THIS\nM=D\n@LCL\nAM=M-1\nD=M\n@ARG\nM=D\n@LCL\nAM=M-1\nD=M\n@R13\nM=D\n@LCL\nA=M-1\nD=M\n@R14\nM=D\n@R13\nA=M\n0;JMP\n(CALLLBL)\n@SP\nM=M+1\nA=M-1\nM=D\n@LCL\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@ARG\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THIS\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THAT\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@R14\nD=M\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP\n")
+        self.f.write("(END)\n@END\n0;JMP\n(EQLBL)\n@R13\nD=M\n@TRUELBL\nD;JEQ\n@FALSELBL\n0;JMP\n(GTLBL)\n@R13\nD=M\n@TRUELBL\nD;JGT\n@FALSELBL\n0;JMP\n(LTLBL)\n@R13\nD=M\n@TRUELBL\nD;JLT\n@FALSELBL\n0;JMP\n(TRUELBL)\n@SP\nA=M-1\nM=-1\n@14\nA=M\n0;JMP\n(FALSELBL)\n@SP\nA=M-1\nM=0\n@14\nA=M\n0;JMP\n(RETURNLBL)\n@SP\nA=M-1\nD=M\n@ARG\nM=D\nD=A\n@SP\nM=D\n@LCL\nAM=M-1\nD=M\n@THAT\nM=D\n@LCL\nAM=M-1\nD=M\n@THIS\nM=D\n@LCL\nAM=M-1\nD=M\n@ARG\nM=D\n@LCL\nAM=M-1\nD=M\n@R13\nM=D\n@LCL\nA=M-1\nD=M\n@R14\nM=D\n@R13\nA=M\n0;JMP\n(CALLLBL)\n@SP\nM=M+1\nA=M-1\nM=D\n@LCL\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@ARG\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THIS\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THAT\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@R14\nD=M\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP\n")
         self.f.close()
 
 
 if len(sys.argv) > 1:
     files = []
-    fName = sys.argv[-1]
+    fName = sys.argv[-1].replace('\\','/')
     if fName.endswith(".vm"):
         files.append(fName)
     else:
