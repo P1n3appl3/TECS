@@ -48,7 +48,7 @@ class CodeWriter:
     def writeInit(self):
         self.f.write("@256\nD=A\n@SP\nM=D\n")
         self.writeCall("Sys.init", 0)
-        self.f.write("(END)\n@END\n0;JMP\n")
+        self.f.write("(HALTLOOP)\n@HALTLOOP\n0;JMP\n")
 
     def writeLabel(self, lbl):
         self.f.write('(' + self.currentFunction + '$' + lbl + ')\n')
@@ -74,7 +74,7 @@ class CodeWriter:
         self.f.write("@RETURNLBL\n0;JMP\n")
 
     def writeCall(self, functionName, argNum):
-        returnAddress = "ret" + str(self.labelNum["call"])
+        returnAddress = "ReturnAddress" + str(self.labelNum["call"])
         self.f.write("@" + functionName + "\nD=A\n@R13\nM=D\n@" + str(argNum + 5) + "\nD=A\n@R14\nM=D\n@" + returnAddress + "\nD=A\n@CALLLBL\n0;JMP\n(" + returnAddress + ")\n")
         self.labelNum["call"] += 1
 
@@ -227,7 +227,7 @@ if len(sys.argv) > 1:
         while p.hasMoreCommands():
             c = p.commandType()
             if "-c" in sys.argv:
-                cw.f.write("//\t\t\t\t" + p.lines[p.currentLine] + '\n')
+                cw.f.write("\n//\t\t\t\t" + p.lines[p.currentLine] + '\n')
             if c == "C_ARITHMETIC":
                 cw.writeArithmetic(p.arg1())
             elif c in {"C_PUSH", "C_POP"}:
@@ -251,7 +251,7 @@ if len(sys.argv) > 1:
         with open(fName.split('.')[0]+".asm", 'r') as src:
             with open(fName.split('.')[0]+".debug", 'w') as dest:
                 for line in src:
-                    if not line.startswith('(') and not line.startswith('//'):
+                    if not line.startswith('(') and not line.startswith('//') and not line == '\n':
                         dest.write(str(lineNum)+'\t\t')
                         lineNum+=1
                     dest.write(line)
