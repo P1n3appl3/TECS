@@ -36,17 +36,19 @@ class Parser:
 
 # Translates vm code and writes assembly to output file
 class CodeWriter:
+
     def __init__(self, fileName):
         self.f = open(fileName + ".asm", 'w')
         self.labelNum = {"eq": 0, "lt": 0, "gt": 0, "call": 0}
         self.currentFunction = ""
-        self.writeInit()
 
     def setFile(self, fileName):
         self.currentFile = fileName.split('/')[-1].split('.')[0]
 
     def writeInit(self):
         self.f.write("@256\nD=A\n@SP\nM=D\n")
+        self.writeCall("Sys.init", 0)
+        self.f.write("(END)\n@END\n0;JMP\n")
 
     def writeLabel(self, lbl):
         self.f.write('(' + self.currentFunction + '$' + lbl + ')\n')
@@ -59,12 +61,13 @@ class CodeWriter:
                      self.currentFunction + '$' + lbl + "\nD;JNE\n")
 
     def writeFunction(self, functionName, localNum):
-        self.currentFunction = self.currentFile + '.' + functionName
+        #self.currentFunction = self.currentFile + '.' + functionName
+        self.currentFunction = functionName
         self.f.write("(" + self.currentFunction + ")\n")
         if localNum == 1:
             self.f.write("@0\nD=A\nM=M+1\nA=M-1\nM=D\n")
         elif localNum > 1:
-            self.f.write("@" + localNum + "\nD=A\n@SP\nM=D+M\n@0\nD=A\nA=M-1\nM=D\n" +
+            self.f.write("@" + str(localNum) + "\nD=A\n@SP\nM=D+M\nD=A\nA=M-1\nM=D\n" +
                          "A=A-1\nM=D\n" * (localNum - 1))
 
     def writeReturn(self):
@@ -72,7 +75,7 @@ class CodeWriter:
 
     def writeCall(self, functionName, argNum):
         returnAddress = "ret" + str(self.labelNum["call"])
-        self.f.write("@" + functionName + "D=A\n@R13\nM=D\n@" + str(argNum + 5) + "\nD=A\n@R14\nM=D\n@" + returnAddress + "\nD=A\n@CALLLBL\n0;JMP\n(" + returnAddress + ")\n")
+        self.f.write("@" + functionName + "\nD=A\n@R13\nM=D\n@" + str(argNum + 5) + "\nD=A\n@R14\nM=D\n@" + returnAddress + "\nD=A\n@CALLLBL\n0;JMP\n(" + returnAddress + ")\n")
         self.labelNum["call"] += 1
 
     def writeArithmetic(self, command):
@@ -133,13 +136,78 @@ class CodeWriter:
                 self.f.write("\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n")
 
     def close(self):
-        self.f.write("(END)\n@END\n0;JMP\n(EQLBL)\n@R13\nD=M\n@TRUELBL\nD;JEQ\n@FALSELBL\n0;JMP\n(GTLBL)\n@R13\nD=M\n@TRUELBL\nD;JGT\n@FALSELBL\n0;JMP\n(LTLBL)\n@R13\nD=M\n@TRUELBL\nD;JLT\n@FALSELBL\n0;JMP\n(TRUELBL)\n@SP\nA=M-1\nM=-1\n@14\nA=M\n0;JMP\n(FALSELBL)\n@SP\nA=M-1\nM=0\n@14\nA=M\n0;JMP\n(RETURNLBL)\n@SP\nA=M-1\nD=M\n@ARG\nM=D\nD=A\n@SP\nM=D\n@LCL\nAM=M-1\nD=M\n@THAT\nM=D\n@LCL\nAM=M-1\nD=M\n@THIS\nM=D\n@LCL\nAM=M-1\nD=M\n@ARG\nM=D\n@LCL\nAM=M-1\nD=M\n@R13\nM=D\n@LCL\nA=M-1\nD=M\n@R14\nM=D\n@R13\nA=M\n0;JMP\n(CALLLBL)\n@SP\nM=M+1\nA=M-1\nM=D\n@LCL\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@ARG\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THIS\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THAT\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@R14\nD=M\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP\n")
+        #self.f.write("(END)\n@END\n0;JMP\n")
+        self.f.write("(EQLBL)\n@R13\nD=M\n@TRUELBL\nD;JEQ\n@FALSELBL\n0;JMP\n")
+        self.f.write("(GTLBL)\n@R13\nD=M\n@TRUELBL\nD;JGT\n@FALSELBL\n0;JMP\n")
+        self.f.write("(LTLBL)\n@R13\nD=M\n@TRUELBL\nD;JLT\n@FALSELBL\n0;JMP\n")
+        self.f.write("(TRUELBL)\n@SP\nA=M-1\nM=-1\n@14\nA=M\n0;JMP\n")
+        self.f.write("(FALSELBL)\n@SP\nA=M-1\nM=0\n@14\nA=M\n0;JMP\n")
+        self.f.write("(RETURNLBL)\n")
+        #*ARG=*SP-1
+        self.f.write("@SP\n")
+        self.f.write("A=M-1\n")
+        self.f.write("D=M\n")
+        self.f.write("@ARG\n")
+        self.f.write("A=M\n")
+        self.f.write("M=D\n")
+        # SP=*ARG+1
+        self.f.write("D=A+1\n")
+        self.f.write("@SP\n")
+        self.f.write("M=D\n")
+        # THAT=*LCL-1
+        self.f.write("@LCL\n")
+        self.f.write("AM=M-1\n")
+        self.f.write("D=M\n")
+        self.f.write("@THAT\n")
+        self.f.write("M=D\n")
+        # THIS=*LCL-2
+        self.f.write("@LCL\n")
+        self.f.write("AM=M-1\n")
+        self.f.write("D=M\n")
+        self.f.write("@THIS\n")
+        self.f.write("M=D\n")
+        # ARG=*LCL-3
+        self.f.write("@LCL\n")
+        self.f.write("AM=M-1\n")
+        self.f.write("D=M\n")
+        self.f.write("@ARG\n")
+        self.f.write("M=D\n")
+        # RET=*LCL-5
+        self.f.write("@LCL\n")
+        self.f.write("M=M-1\n")
+        self.f.write("AM=M-1\n")
+        self.f.write("D=M\n")
+        self.f.write("@R13\n")
+        self.f.write("M=D\n")
+        # LCL=*LCL-4
+        self.f.write("@LCL\n")
+        self.f.write("A=M+1\n")
+        self.f.write("D=M\n")
+        self.f.write("@LCL\n")
+        self.f.write("M=D\n")
+        # GOTO RET
+        self.f.write("@R13\n")
+        self.f.write("A=M\n")
+        self.f.write("0;JMP\n")
+
+        # push return address
+        # push LCL
+        # push ARG
+        # push THIS
+        # push THAT
+        # ARG = SP-n-5 where n=number of args
+        #LCL = SP
+        # goto f
+        #(return addr)
+        # self.f.write("\n")
+
+        self.f.write("(CALLLBL)\n@SP\nM=M+1\nA=M-1\nM=D\n@LCL\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@ARG\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THIS\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THAT\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@R14\nD=M\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP\n")
         self.f.close()
 
 
 if len(sys.argv) > 1:
     files = []
-    fName = sys.argv[-1].replace('\\','/')
+    fName = sys.argv[-1].replace('\\', '/')
     if fName.endswith(".vm"):
         files.append(fName)
     else:
@@ -149,6 +217,8 @@ if len(sys.argv) > 1:
     if "-m" not in sys.argv:
         print "Parsing " + str(len(files)) + " file(s)"
     cw = CodeWriter(fName.split('.')[0])
+    if "-b" not in sys.argv:
+        cw.writeInit()
     for f in files:
         p = Parser(f)
         cw.setFile(f)
@@ -157,7 +227,7 @@ if len(sys.argv) > 1:
         while p.hasMoreCommands():
             c = p.commandType()
             if "-c" in sys.argv:
-                cw.f.write("//" + p.lines[p.currentLine] + '\n')
+                cw.f.write("//\t\t\t\t" + p.lines[p.currentLine] + '\n')
             if c == "C_ARITHMETIC":
                 cw.writeArithmetic(p.arg1())
             elif c in {"C_PUSH", "C_POP"}:
@@ -168,9 +238,24 @@ if len(sys.argv) > 1:
                 cw.writeGoto(p.arg1())
             elif c == "C_IF":
                 cw.writeIf(p.arg1())
+            elif c == "C_FUNCTION":
+                cw.writeFunction(p.arg1(), p.arg2())
+            elif c == "C_CALL":
+                cw.writeCall(p.arg1(), p.arg2())
+            elif c == "C_RETURN":
+                cw.writeReturn()
             p.advance()
     cw.close()
+    if "-l" in sys.argv:
+        lineNum = 0
+        with open(fName.split('.')[0]+".asm", 'r') as src:
+            with open(fName.split('.')[0]+".debug", 'w') as dest:
+                for line in src:
+                    if not line.startswith('(') and not line.startswith('//'):
+                        dest.write(str(lineNum)+'\t\t')
+                        lineNum+=1
+                    dest.write(line)
     if "-m" not in sys.argv:
-        print "Done"
+        print "Translation Complete"
 else:
-    print "usage: vmtranslator.py [options] sourceFile[.vm]\n\tsourceFile may be file or directory.\noptions:\n\t-m mutes progress messages\n\t-c writes vm commands as comments in .asm file"
+    print "usage: vmtranslator.py [options] source[.vm]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-m mutes progress messages\n\t-c writes vm commands as comments in .asm file\n\t-b doesn't generate bootstrap code\n\t-l creates source.debug with adjusted line numbers"
