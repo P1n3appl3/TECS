@@ -2,19 +2,23 @@
 nand2tetris course work
 
 # Software
-## Assembler (.asm -> .hack)
-```
-usage: assembler.py sourceFile[.asm]
-```
 ## VM translator (.vm -> .asm)
 ```
 usage: vmtranslator.py [options] source[.vm]
     sourceFile(s) may be file or directory.
 options:
-    -m mutes progress messages  
-    -c writes vm commands as comments in .asm file
     -b doesn't generate bootstrap code
+    -c writes vm commands as comments in .asm file
     -l creates source.debug with adjusted line numbers
+    -m mutes status messages  
+    -p prints output to stdout
+```
+## Assembler (.asm -> .hack)
+```
+usage: assembler.py sourceFile[.asm]
+options:
+    -m mutes status messages
+    -p prints output to stdout
 ```
 
 # Hardware
