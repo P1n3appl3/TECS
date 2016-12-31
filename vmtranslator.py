@@ -2,9 +2,8 @@
 import sys
 import os
 
+
 # Handles input parsing and sanatization
-
-
 class Parser:
     currentLine = 0
 
@@ -48,7 +47,7 @@ class CodeWriter:
     def writeInit(self):
         self.f.write("@256\nD=A\n@SP\nM=D\n")
         self.writeCall("Sys.init", 0)
-        self.f.write("(HALTLOOP)\n@HALTLOOP\n0;JMP\n")
+        self.f.write("@HALTLOOP\n0;JMP\n")
 
     def writeLabel(self, lbl):
         self.f.write('(' + self.currentFunction + '$' + lbl + ')\n')
@@ -136,72 +135,7 @@ class CodeWriter:
                 self.f.write("\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n")
 
     def close(self):
-        #self.f.write("(END)\n@END\n0;JMP\n")
-        self.f.write("(EQLBL)\n@R13\nD=M\n@TRUELBL\nD;JEQ\n@FALSELBL\n0;JMP\n")
-        self.f.write("(GTLBL)\n@R13\nD=M\n@TRUELBL\nD;JGT\n@FALSELBL\n0;JMP\n")
-        self.f.write("(LTLBL)\n@R13\nD=M\n@TRUELBL\nD;JLT\n@FALSELBL\n0;JMP\n")
-        self.f.write("(TRUELBL)\n@SP\nA=M-1\nM=-1\n@14\nA=M\n0;JMP\n")
-        self.f.write("(FALSELBL)\n@SP\nA=M-1\nM=0\n@14\nA=M\n0;JMP\n")
-        self.f.write("(RETURNLBL)\n")
-        #*ARG=*SP-1
-        self.f.write("@SP\n")
-        self.f.write("A=M-1\n")
-        self.f.write("D=M\n")
-        self.f.write("@ARG\n")
-        self.f.write("A=M\n")
-        self.f.write("M=D\n")
-        # SP=*ARG+1
-        self.f.write("D=A+1\n")
-        self.f.write("@SP\n")
-        self.f.write("M=D\n")
-        # THAT=*LCL-1
-        self.f.write("@LCL\n")
-        self.f.write("AM=M-1\n")
-        self.f.write("D=M\n")
-        self.f.write("@THAT\n")
-        self.f.write("M=D\n")
-        # THIS=*LCL-2
-        self.f.write("@LCL\n")
-        self.f.write("AM=M-1\n")
-        self.f.write("D=M\n")
-        self.f.write("@THIS\n")
-        self.f.write("M=D\n")
-        # ARG=*LCL-3
-        self.f.write("@LCL\n")
-        self.f.write("AM=M-1\n")
-        self.f.write("D=M\n")
-        self.f.write("@ARG\n")
-        self.f.write("M=D\n")
-        # RET=*LCL-5
-        self.f.write("@LCL\n")
-        self.f.write("M=M-1\n")
-        self.f.write("AM=M-1\n")
-        self.f.write("D=M\n")
-        self.f.write("@R13\n")
-        self.f.write("M=D\n")
-        # LCL=*LCL-4
-        self.f.write("@LCL\n")
-        self.f.write("A=M+1\n")
-        self.f.write("D=M\n")
-        self.f.write("@LCL\n")
-        self.f.write("M=D\n")
-        # GOTO RET
-        self.f.write("@R13\n")
-        self.f.write("A=M\n")
-        self.f.write("0;JMP\n")
-
-        # push return address
-        # push LCL
-        # push ARG
-        # push THIS
-        # push THAT
-        # ARG = SP-n-5 where n=number of args
-        #LCL = SP
-        # goto f
-        #(return addr)
-        # self.f.write("\n")
-
-        self.f.write("(CALLLBL)\n@SP\nM=M+1\nA=M-1\nM=D\n@LCL\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@ARG\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THIS\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THAT\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@R14\nD=M\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP\n")
+        self.f.write("(HALTLOOP)\n@HALTLOOP\n0;JMP\n(EQLBL)\n@R13\nD=M\n@TRUELBL\nD;JEQ\n@FALSELBL\n0;JMP\n(GTLBL)\n@R13\nD=M\n@TRUELBL\nD;JGT\n@FALSELBL\n0;JMP\n(LTLBL)\n@R13\nD=M\n@TRUELBL\nD;JLT\n@FALSELBL\n0;JMP\n(TRUELBL)\n@SP\nA=M-1\nM=-1\n@14\nA=M\n0;JMP\n(FALSELBL)\n@SP\nA=M-1\nM=0\n@14\nA=M\n0;JMP\n(RETURNLBL)\n@5\nD=A\n@LCL\nA=M-D\nD=M\n@R13\nM=D\n@SP\nA=M-1\nD=M\n@ARG\nA=M\nM=D\nD=A+1\n@SP\nM=D\n@LCL\nAM=M-1\nD=M\n@THAT\nM=D\n@LCL\nAM=M-1\nD=M\n@THIS\nM=D\n@LCL\nAM=M-1\nD=M\n@ARG\nM=D\n@LCL\nA=M-1\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP\n(CALLLBL)\n@SP\nM=M+1\nA=M-1\nM=D\n@LCL\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@ARG\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THIS\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@THAT\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n@R14\nD=M\n@SP\nD=M-D\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@R13\nA=M\n0;JMP\n")
         self.f.close()
 
 
@@ -248,14 +182,16 @@ if len(sys.argv) > 1:
     cw.close()
     if "-l" in sys.argv:
         lineNum = 0
-        with open(fName.split('.')[0]+".asm", 'r') as src:
-            with open(fName.split('.')[0]+".debug", 'w') as dest:
+        with open(fName.split('.')[0] + ".asm", 'r') as src:
+            with open(fName.split('.')[0] + ".debug", 'w') as dest:
                 for line in src:
                     if not line.startswith('(') and not line.startswith('//') and not line == '\n':
-                        dest.write(str(lineNum)+'\t\t')
-                        lineNum+=1
+                        dest.write(str(lineNum) + '\t\t')
+                        lineNum += 1
+                    if '-p' in sys.argv:
+                        print line,
                     dest.write(line)
     if "-m" not in sys.argv:
         print "Translation Complete"
 else:
-    print "usage: vmtranslator.py [options] source[.vm]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-m mutes progress messages\n\t-c writes vm commands as comments in .asm file\n\t-b doesn't generate bootstrap code\n\t-l creates source.debug with adjusted line numbers"
+    print "usage: vmtranslator.py [options] source[.vm]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-m mutes status messages\n\t-c writes vm commands as comments in .asm file\n\t-b doesn't generate bootstrap code\n\t-l creates source.debug with adjusted line numbers\n\t-p prints output to stdout"
