@@ -1,0 +1,34 @@
+class Main {
+    function void main() {
+        var Board b;
+        let b = Board.new(20,20,10);
+        while(true){
+            do Sys.wait(100);
+            do b.set(5,5,true);
+            do Output.printInt(b.get(5,5));
+            do b.draw();
+        }
+        do Output.printString("test");
+        do b.dispose();
+        return;
+    }
+}
+
+/*
+Nintendo or Sega rotation system
+Wall Kicks
+Lock Delay
+Preview Piece(s)
+Line clear animation
+Delayed autoshift
+Entry delay
+Score
+Levels/Increase Speed/Decrease Lock Delay
+Ghost piece
+10x22 (10x20 visible) ceiling blocks rotation
+PRNG (seed by waiting for user to start)
+Single highscore
+Different block sprites
+Background Image
+http://tetris.wikia.com/wiki/Tetris_Guideline
+*/

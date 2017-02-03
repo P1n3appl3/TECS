@@ -1,0 +1,240 @@
+function Board.new 1
+push constant 4
+call Memory.alloc 1
+pop pointer 0
+push constant 10
+pop static 0
+push constant 22
+pop static 1
+push constant 0
+pop local 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 2
+push pointer 0
+call Board.graphicsInit 1
+pop temp 0
+push static 0
+call Array.new 1
+pop this 3
+label WHILE_EXP0
+push local 0
+push static 0
+lt
+not
+if-goto WHILE_END0
+push local 0
+push this 3
+add
+push static 1
+call Array.new 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+return
+function Board.get 1
+push argument 0
+pop pointer 0
+push argument 1
+push this 3
+add
+pop pointer 1
+push that 0
+pop local 0
+push argument 2
+push local 0
+add
+pop pointer 1
+push that 0
+return
+function Board.set 1
+push argument 0
+pop pointer 0
+push argument 1
+push this 3
+add
+pop pointer 1
+push that 0
+pop local 0
+push argument 2
+push local 0
+add
+push argument 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function Board.graphicsInit 2
+push argument 0
+pop pointer 0
+push static 0
+push this 2
+call Math.multiply 2
+pop local 0
+push static 1
+push this 2
+call Math.multiply 2
+pop local 1
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push local 0
+add
+push this 1
+push local 1
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push local 0
+add
+push this 1
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push this 1
+push local 1
+add
+push this 0
+push local 0
+add
+push this 1
+push local 1
+add
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push this 1
+push this 0
+push this 1
+push local 1
+add
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push local 0
+add
+push this 1
+push this 0
+push local 0
+add
+push this 1
+push local 1
+add
+call Screen.drawLine 4
+pop temp 0
+push constant 0
+return
+function Board.draw 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 2
+pop local 1
+label WHILE_EXP0
+push local 1
+push static 1
+lt
+not
+if-goto WHILE_END0
+label WHILE_EXP1
+push local 0
+push static 0
+lt
+not
+if-goto WHILE_END1
+push local 0
+push this 3
+add
+pop pointer 1
+push that 0
+pop local 2
+push local 1
+push local 2
+add
+pop pointer 1
+push that 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push local 2
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 123
+call Output.printInt 1
+pop temp 0
+label IF_FALSE0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Board.dispose 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push static 0
+lt
+not
+if-goto WHILE_END0
+push local 1
+push this 3
+add
+pop pointer 1
+push that 0
+pop local 1
+push local 1
+call Array.dispose 1
+pop temp 0
+goto WHILE_EXP0
+label WHILE_END0
+push this 3
+call Array.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return

@@ -1,0 +1,85 @@
+class Board {
+    static int w;
+    static int h;
+
+    field int x;
+    field int y;
+    field int size;
+    field Array matrix;
+
+   constructor Board new(int a, int b, int s){
+       var int i;
+       let w = 10;
+       let h = 22;
+       let i=0;
+       let x = a;
+       let y = b;
+       let size = s;
+       do graphicsInit();
+       let matrix = Array.new(w);
+       while(i<w){
+           let matrix[i] = Array.new(h);
+           let i=i+1;
+       }
+       return this;
+   }
+
+   method boolean get(int a, int b){
+       var Array temp;
+       let temp=matrix[a];
+       return temp[b];
+   }
+
+   method void set(int a, int b, boolean c){
+       var Array temp;
+       let temp=matrix[a];
+       let temp[b]=c;
+       return;
+   }
+
+   method void graphicsInit(){
+       var int ww,hh;
+       let ww=w*size;
+       let hh=h*size;
+       do Screen.setColor(false);
+       do Screen.drawRectangle(x,y,x+ww,y+hh);
+       do Screen.setColor(true);
+       do Screen.drawLine(x,y,x+ww,y);
+       do Screen.drawLine(x,y+hh,x+ww,y+hh);
+       do Screen.drawLine(x,y,x,y+hh);
+       do Screen.drawLine(x+ww,y,x+ww,y+hh);
+       return;
+   }
+
+   method void draw(){
+       var int i, j, temp;
+       let i=0;
+       let j=2;
+       while(j<h){
+           while(i<w){
+               let temp = matrix[i];
+               do Screen.setColor(temp[j]);
+               if(temp[j]=-1){
+                   do Output.printInt(123);
+               }
+               //do Screen.drawRectangle(x+(i*size), y+(j*size), x+((i+1)*size), y+((j+1)*size);
+               let i = i+1;
+           }
+           let j = j+1;
+       }
+       return;
+   }
+
+   method void dispose(){
+       var int i;
+       var Array temp;
+       let i = 0;
+       while(i<w){
+           let temp = matrix[temp];
+           do temp.dispose();
+       }
+       do matrix.dispose();
+       do Memory.deAlloc(this);
+       return;
+   }
+}
