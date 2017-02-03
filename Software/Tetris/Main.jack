@@ -1,16 +1,53 @@
 class Main {
     function void main() {
         var Board b;
+        var int x, y;
+        let x=5;
+        let y=5;
         let b = Board.new(20,20,10);
         while(true){
-            do Sys.wait(100);
-            do b.set(5,5,true);
-            do Output.printInt(b.get(5,5));
+            do b.set(x,y,false);
+            if(Keyboard.keyPressed()=131){
+                let y=y-1;
+            }
+            if(Keyboard.keyPressed()=132){
+                let x=x+1;
+            }
+            if(Keyboard.keyPressed()=133){
+                let y=y+1;
+            }
+            if(Keyboard.keyPressed()=130){
+                let x=x-1;
+            }
+            let x = Main.mod(x,10);
+            let y = Main.mod(y,22);
+            if(x<0){
+                let x = x+10;
+            }
+            if(y<0){
+                let y = y+22;
+            }
+            do b.set(x,y,true);
+            do Output.moveCursor(0,0);
+            do Output.printInt(x);
+            do Output.printString(" ");
+            do Output.printInt(y);
             do b.draw();
+            do Sys.wait(30);
         }
-        do Output.printString("test");
         do b.dispose();
         return;
+    }
+
+    function int mod(int a, int b){
+        return a-((a/b)*b);
+    }
+
+    function int abs(int a){
+        if(a<0){
+            return -a;
+        }
+        return a;
     }
 }
 

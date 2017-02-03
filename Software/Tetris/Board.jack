@@ -59,13 +59,30 @@ class Board {
            while(i<w){
                let temp = matrix[i];
                do Screen.setColor(temp[j]);
-               if(temp[j]=-1){
-                   do Output.printInt(123);
-               }
-               //do Screen.drawRectangle(x+(i*size), y+(j*size), x+((i+1)*size), y+((j+1)*size);
+               do Screen.drawRectangle(x+(i*size)+1, y+((j-2)*size)+1, x+((i+1)*size)-1, y+((j-1)*size)-1);
                let i = i+1;
            }
            let j = j+1;
+           let i = 0;
+       }
+       return;
+   }
+
+   method void debugPrint(){
+       var int i, j, temp;
+       let i=0;
+       let j=2;
+       while(j<h){
+           while(i<w){
+               let temp = matrix[i];
+               do Output.printInt(temp[j]);
+               do Output.printString(",");
+               let i = i+1;
+           }
+           do Output.printInt(w);
+           do Output.println();
+           let j = j+1;
+           let i = 0;
        }
        return;
    }
