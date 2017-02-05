@@ -1,7 +1,7 @@
 class Board {
     static int w;
     static int h;
-
+    
     field int x;
     field int y;
     field int size;
@@ -11,7 +11,7 @@ class Board {
        var int i;
        let w = 10;
        let h = 22;
-       let i=0;
+       let i = 0;
        let x = a;
        let y = b;
        let size = s;
@@ -19,35 +19,35 @@ class Board {
        let matrix = Array.new(w);
        while(i<w){
            let matrix[i] = Array.new(h);
-           let i=i+1;
+           let i = i+1;
        }
        return this;
    }
 
    method boolean get(int a, int b){
        var Array temp;
-       let temp=matrix[a];
+       let temp = matrix[a];
        return temp[b];
    }
 
    method void set(int a, int b, boolean c){
        var Array temp;
-       let temp=matrix[a];
-       let temp[b]=c;
+       let temp = matrix[a];
+       let temp[b] = c;
        return;
    }
 
    method void graphicsInit(){
-       var int ww,hh;
-       let ww=w*size;
-       let hh=h*size;
+       var int ww, hh;
+       let ww = w*size;
+       let hh = (h-2)*size;
        do Screen.setColor(false);
-       do Screen.drawRectangle(x,y,x+ww,y+hh);
+       do Screen.drawRectangle(x, y, x+ww, y+hh);
        do Screen.setColor(true);
-       do Screen.drawLine(x,y,x+ww,y);
-       do Screen.drawLine(x,y+hh,x+ww,y+hh);
-       do Screen.drawLine(x,y,x,y+hh);
-       do Screen.drawLine(x+ww,y,x+ww,y+hh);
+       do Screen.drawLine(x, y, x+ww, y);
+       do Screen.drawLine(x, y+hh, x+ww, y+hh);
+       do Screen.drawLine(x, y, x, y+hh);
+       do Screen.drawLine(x+ww, y, x+ww, y+hh);
        return;
    }
 
