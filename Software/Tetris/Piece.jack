@@ -1,0 +1,50 @@
+class Piece {
+    field int x;
+    field int y;
+    field int rotation;
+    field int type;
+    field Array shape;
+
+    constructor Board new(int t){
+        let type = t;
+        let rotation = 0;
+        let y = 21;
+        if(type<2){
+            let x = 5;
+        }
+        else{
+            let x =
+        }
+    }
+}
+/*
+0 = I
+....  ....  ....  .O..
+OOOO  ....  ....  .O..
+....  ....  ....  .O..
+....  ....  ....  .O..
+1 = O
+.OO. .OO. .OO. .OO.
+.OO. .OO. .OO. .OO.
+.... .... .... ....
+2 = T
+.O. .O. ... .O.
+OOO .OO OOO OO.
+... .O. .O. .O.
+3 = S
+.OO .O. ... O..
+OO. .OO .OO OO.
+... ..O OO. .O.
+4 = Z
+OO. ..O ... .O.
+.OO .OO OO. OO.
+... .O. .OO O..
+5 = J
+O.. .OO ... .O.
+OOO .O. OOO .O.
+... .O. ..O OO.
+6 = L
+..O .O. ... OO.
+OOO .O. OOO .O.
+... .OO O.. .O.
+*/
