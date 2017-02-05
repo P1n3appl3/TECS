@@ -2,25 +2,25 @@ class Main {
     function void main() {
         var Board b;
         var int x, y;
-        let x=5;
-        let y=5;
-        let b = Board.new(20,20,10);
+        let x = 5;
+        let y = 5;
+        let b = Board.new(20, 20, 10);
         while(true){
-            do b.set(x,y,false);
+            do b.set(x, y, false);
             if(Keyboard.keyPressed()=131){
-                let y=y-1;
+                let y = y-1;
             }
             if(Keyboard.keyPressed()=132){
-                let x=x+1;
+                let x = x+1;
             }
             if(Keyboard.keyPressed()=133){
-                let y=y+1;
+                let y = y+1;
             }
             if(Keyboard.keyPressed()=130){
-                let x=x-1;
+                let x = x-1;
             }
-            let x = Main.mod(x,10);
-            let y = Main.mod(y,22);
+            let x = Main.mod(x, 10);
+            let y = Main.mod(y, 22);
             if(x<0){
                 let x = x+10;
             }
@@ -52,9 +52,9 @@ class Main {
 }
 
 /*
-Nintendo or Sega rotation system
+Super rotation system
 Wall Kicks
-Lock Delay
+Lock Delay - infinity
 Preview Piece(s)
 Line clear animation
 Delayed autoshift
