@@ -1,50 +1,84 @@
 class Piece {
-    field int x;
-    field int y;
-    field int rotation;
-    field int type;
+    static Array data;
+    field int x, y, rotation, type;
     field Array shape;
 
-    constructor Board new(int t){
+    constructor Piece new(int t){
         let type = t;
         let rotation = 0;
         let y = 21;
+        let shape = Array.new(4);
         if(type<2){
-            let x = 5;
+            let x = 3;
         }
         else{
-            let x =
+            let x = 4;
         }
+        return this;
+    }
+
+    function Array decode(int a, int b){
+        var int temp, i;
+        var Array out;
+        let i = 0;
+        let out = Array.new(4);
+        let temp = data[a];
+        return out;
+    }
+
+    function void init(){
+        var int i, j, temp;
+        let data = Array.new(7);
+        let i = 0;
+        while(i<7){
+            let j = 0;
+            let data[i] = Array.new(4);
+            while(j<4){
+                let temp = data[i];
+                let temp[i] = Array.new(4);
+            }
+        }
+        let temp = data[0];
+        let temp[0] = 1920;
+        let temp[1] = 4369;
+        let temp[2] = 120;
+        let temp[3] = 8738;
+        let temp = data[1];
+        let temp[0] = 13056;
+        let temp[1] = 13056;
+        let temp[2] = 13056;
+        let temp[3] = 13056;
+        let temp = data[2];
+        let temp[0] = 9984;
+        let temp[1] = 8992;
+        let temp[2] = 1824;
+        let temp[3] = 9760;
+        let temp = data[3];
+        let temp[0] = 13824;
+        let temp[1] = 8976;
+        let temp[2] = 864;
+        let temp[3] = 17952;
+        let temp = data[4];
+        let temp[0] = 25344;
+        let temp[1] = 4896;
+        let temp[2] = 1584;
+        let temp[3] = 9792;
+        let temp = data[5];
+        let temp[0] = 18176;
+        let temp[1] = 12832;
+        let temp[2] = 1808;
+        let temp[3] = 8800;
+        let temp = data[6];
+        let temp[0] = 5888;
+        let temp[1] = 8752;
+        let temp[2] = 1856;
+        let temp[3] = 25120;
+        return;
+    }
+
+    method void dispose(){
+        do shape.dispose();
+        do Memory.deAlloc(this);
+        return;
     }
 }
-/*
-0 = I
-....  ....  ....  .O..
-OOOO  ....  ....  .O..
-....  ....  ....  .O..
-....  ....  ....  .O..
-1 = O
-.OO. .OO. .OO. .OO.
-.OO. .OO. .OO. .OO.
-.... .... .... ....
-2 = T
-.O. .O. ... .O.
-OOO .OO OOO OO.
-... .O. .O. .O.
-3 = S
-.OO .O. ... O..
-OO. .OO .OO OO.
-... ..O OO. .O.
-4 = Z
-OO. ..O ... .O.
-.OO .OO OO. OO.
-... .O. .OO O..
-5 = J
-O.. .OO ... .O.
-OOO .O. OOO .O.
-... .O. ..O OO.
-6 = L
-..O .O. ... OO.
-OOO .O. OOO .O.
-... .OO O.. .O.
-*/

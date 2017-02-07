@@ -1,0 +1,71 @@
+Super rotation system
+Wall Kicks
+Lock Delay - infinity
+Preview Piece(s)
+Line clear animation
+Delayed autoshift
+Entry delay
+Score
+Levels/Increase Speed/Decrease Lock Delay
+Ghost piece
+10x22 (10x20 visible) ceiling blocks rotation
+PRNG (seed by waiting for user to start)
+Single highscore
+Different block sprites
+Background Image
+http://tetris.wikia.com/wiki/Tetris_Guideline
+
+0 = I
+....  ..O.  ....  .O..
+OOOO  ..O.  ....  .O..
+....  ..O.  OOOO  .O..
+....  ..O.  ....  .O..
+000011110000000 1920
+001000100010001 4369
+000000001111000 120
+010001000100010 8738
+1 = O
+.OO. .OO. .OO. .OO.
+.OO. .OO. .OO. .OO.
+.... .... .... ....
+011001100000000 13056
+2 = T
+.O. .O. ... .O.
+OOO .OO OOO OO.
+... .O. .O. .O.
+010011100000000 9984
+010001100100000 8992
+000011100100000 1824
+010011000100000 9760
+3 = S
+.OO .O. ... O..
+OO. .OO .OO OO.
+... ..O OO. .O.
+011011000000000 13824
+010001100010000 8976
+000001101100000 864
+100011000100000 17952
+4 = Z
+OO. ..O ... .O.
+.OO .OO OO. OO.
+... .O. .OO O..
+110001100000000 25344
+001001100100000 4896
+000011000110000 1584
+010011001000000 9792
+5 = J
+O.. .OO ... .O.
+OOO .O. OOO .O.
+... .O. ..O OO.
+100011100000000 18176
+011001000100000 12832
+000011100010000 1808
+010001001100000 8800
+6 = L
+..O .O. ... OO.
+OOO .O. OOO .O.
+... .OO O.. .O.
+001011100000000 5888
+010001000110000 8752
+000011101000000 1856
+110001000100000 25120

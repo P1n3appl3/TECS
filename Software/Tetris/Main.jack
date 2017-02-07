@@ -1,7 +1,11 @@
 class Main {
     function void main() {
         var Board b;
+        var Array temp;
         var int x, y;
+
+        do Piece.init();
+
         let x = 5;
         let y = 5;
         let b = Board.new(20, 20, 10);
@@ -50,22 +54,3 @@ class Main {
         return a;
     }
 }
-
-/*
-Super rotation system
-Wall Kicks
-Lock Delay - infinity
-Preview Piece(s)
-Line clear animation
-Delayed autoshift
-Entry delay
-Score
-Levels/Increase Speed/Decrease Lock Delay
-Ghost piece
-10x22 (10x20 visible) ceiling blocks rotation
-PRNG (seed by waiting for user to start)
-Single highscore
-Different block sprites
-Background Image
-http://tetris.wikia.com/wiki/Tetris_Guideline
-*/

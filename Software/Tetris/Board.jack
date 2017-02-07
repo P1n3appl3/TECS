@@ -1,10 +1,5 @@
 class Board {
-    static int w;
-    static int h;
-    
-    field int x;
-    field int y;
-    field int size;
+    field int w, h, x, y, size;
     field Array matrix;
 
    constructor Board new(int a, int b, int s){
