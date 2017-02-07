@@ -1,10 +1,22 @@
 class Main {
-    function void main() {
+
+    function void main(){
+        var Board b;
+        var Game g;
+        do Piece.init();
+        let b = Board.new(200, 30, 10);
+        let g = Game.new(b);
+        do g.test();
+        do b.dispose();
+        return;
+    }
+
+    method void test(){
         var Board b;
         var Array temp;
         var int x, y;
 
-        do Piece.init();
+        //do Piece.init();
 
         let x = 5;
         let y = 5;
@@ -39,12 +51,19 @@ class Main {
             do b.draw();
             do Sys.wait(30);
         }
-        do b.dispose();
         return;
     }
 
     function int mod(int a, int b){
         return a-((a/b)*b);
+    }
+
+    function boolean isOdd(int a){
+        if(Main.mod(a,2)=1){
+            return true;
+        }
+        return false;
+        //return mod(a,2)=1;
     }
 
     function int abs(int a){

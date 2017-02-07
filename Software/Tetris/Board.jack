@@ -19,6 +19,18 @@ class Board {
        return this;
    }
 
+   method int getX(){
+       return x;
+   }
+
+   method int getY(){
+       return y;
+   }
+
+   method int getSize(){
+       return size;
+   }
+
    method boolean get(int a, int b){
        var Array temp;
        let temp = matrix[a];

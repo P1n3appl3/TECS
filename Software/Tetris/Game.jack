@@ -1,0 +1,17 @@
+class Game {
+    field Board board;
+
+    constructor Game new(Board b){
+        let board = b;
+        return this;
+    }
+
+    method void test(){
+        var Piece p;
+        let p = Piece.new(4);
+        do p.setY(6);
+        do p.draw(board);
+        return;
+    }
+
+}

@@ -7,37 +7,80 @@ class Piece {
         let type = t;
         let rotation = 0;
         let y = 21;
-        let shape = Array.new(4);
-        if(type<2){
+        do Output.printString("test1");
+        let shape = Piece.decode(t, 0);
+        do Output.printString("test2");
+        let x = 4;
+        if(type<2){ //I and O pieces are 4 wide so they are placed one more to the left
             let x = 3;
-        }
-        else{
-            let x = 4;
         }
         return this;
     }
 
-    function Array decode(int a, int b){
-        var int temp, i;
-        var Array out;
+    method void setX(int a){
+        let x = a;
+        return;
+    }
+
+    method void setY(int a){
+        let y = a;
+        return;
+    }
+
+    method int getX(){
+        return x;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+    method void draw(Board b){
+        var int bx, by, bsize, i, tempX, tempY;
+        var Vector temp;
+        let bx = b.getX();
+        let by = b.getY();
+        let bsize = b.getSize();
         let i = 0;
+        while(i<4){
+            let temp = shape[i];
+            let tempX = temp.getX();
+            let tempY = temp.getY();
+            do Screen.setColor(true);
+            do Screen.drawRectangle((tempX*bsize)+bx, (tempY*bsize)+by, ((tempX+1)*bsize)+bx, ((tempY+1)*bsize)+by);
+            let i = i+1;
+        }
+        return;
+    }
+
+    function Array decode(int a, int b){
+        var int temp, i, j;
+        var Array out;
+        let i = 14;
+        let j = 0;
         let out = Array.new(4);
         let temp = data[a];
+        let temp = temp[b];
+        while(i>-1){
+            if(Main.isOdd(temp)){
+                let out[j] = Vector.new(Main.mod(i,4), i/4);
+                let j = j+1;
+            }
+            let temp = temp/2; //bitshift right
+            let i = i+1;
+        }
         return out;
     }
 
     function void init(){
-        var int i, j, temp;
+        var int i, temp;
         let data = Array.new(7);
         let i = 0;
         while(i<7){
-            let j = 0;
             let data[i] = Array.new(4);
-            while(j<4){
-                let temp = data[i];
-                let temp[i] = Array.new(4);
-            }
+            let i = i+1;
         }
+        //see notes.txt for the deduction of these constants
         let temp = data[0];
         let temp[0] = 1920;
         let temp[1] = 4369;
