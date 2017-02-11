@@ -6,14 +6,12 @@ class Piece {
     constructor Piece new(int t){
         let type = t;
         let rotation = 0;
-        let y = 21;
-        do Output.printString("test1");
-        let shape = Piece.decode(t, 0);
-        do Output.printString("test2");
-        let x = 4;
+        let y = 0;
+        let x = 3;
         if(type<2){ //I and O pieces are 4 wide so they are placed one more to the left
             let x = 3;
         }
+        let shape = Piece.getPiece(t, 0);
         return this;
     }
 
@@ -44,78 +42,209 @@ class Piece {
         let i = 0;
         while(i<4){
             let temp = shape[i];
-            let tempX = temp.getX();
             let tempY = temp.getY();
-            do Screen.setColor(true);
-            do Screen.drawRectangle((tempX*bsize)+bx, (tempY*bsize)+by, ((tempX+1)*bsize)+bx, ((tempY+1)*bsize)+by);
-            let i = i+1;
+            if(tempY+y>1){
+                let tempX = temp.getX();
+                //do Screen.setColor(true);
+                do Screen.drawRectangle(((x+tempX)*bsize)+bx+1, ((y+tempY-2)*bsize)+by-1, ((x+tempX+1)*bsize)+bx+1, ((y+tempY-1)*bsize)+by-1);
+            }
+            let i = i + 1;
         }
         return;
     }
 
-    function Array decode(int a, int b){
-        var int temp, i, j;
-        var Array out;
-        let i = 14;
-        let j = 0;
-        let out = Array.new(4);
-        let temp = data[a];
-        let temp = temp[b];
-        while(i>-1){
-            if(Main.isOdd(temp)){
-                let out[j] = Vector.new(Main.mod(i,4), i/4);
-                let j = j+1;
-            }
-            let temp = temp/2; //bitshift right
-            let i = i+1;
-        }
-        return out;
+    function Array getPiece(int sel, int rot){
+        var Array temp;
+        let temp = data[sel];
+        return temp[rot];
     }
 
     function void init(){
-        var int i, temp;
+        var int i, j;
+        var Array temp, n;
         let data = Array.new(7);
         let i = 0;
         while(i<7){
             let data[i] = Array.new(4);
-            let i = i+1;
+            let j = 0;
+            while(j<4){
+                let temp = data[i];
+                let temp[j] = Array.new(4);
+                let j = j + 1;
+            }
+            let i = i + 1;
         }
         //see notes.txt for the deduction of these constants
-        let temp = data[0];
-        let temp[0] = 1920;
-        let temp[1] = 4369;
-        let temp[2] = 120;
-        let temp[3] = 8738;
-        let temp = data[1];
-        let temp[0] = 13056;
-        let temp[1] = 13056;
-        let temp[2] = 13056;
-        let temp[3] = 13056;
-        let temp = data[2];
-        let temp[0] = 9984;
-        let temp[1] = 8992;
-        let temp[2] = 1824;
-        let temp[3] = 9760;
-        let temp = data[3];
-        let temp[0] = 13824;
-        let temp[1] = 8976;
-        let temp[2] = 864;
-        let temp[3] = 17952;
-        let temp = data[4];
-        let temp[0] = 25344;
-        let temp[1] = 4896;
-        let temp[2] = 1584;
-        let temp[3] = 9792;
-        let temp = data[5];
-        let temp[0] = 18176;
-        let temp[1] = 12832;
-        let temp[2] = 1808;
-        let temp[3] = 8800;
-        let temp = data[6];
-        let temp[0] = 5888;
-        let temp[1] = 8752;
-        let temp[2] = 1856;
-        let temp[3] = 25120;
+        let n = data[0]; // I
+        let temp = n[0];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(3, 1);
+        let temp = n[1];
+        let temp[0] = Vector.new(2, 0);
+        let temp[1] = Vector.new(2, 1);
+        let temp[2] = Vector.new(2, 2);
+        let temp[3] = Vector.new(2, 3);
+        let temp = n[2];
+        let temp[0] = Vector.new(0, 2);
+        let temp[1] = Vector.new(1, 2);
+        let temp[2] = Vector.new(2, 2);
+        let temp[3] = Vector.new(3, 2);
+        let temp = n[3];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(1, 2);
+        let temp[3] = Vector.new(1, 3);
+
+        let n = data[1]; // O
+        let temp = n[0];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(2, 0);
+        let temp = n[1];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(2, 0);
+        let temp = n[2];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(2, 0);
+        let temp = n[3];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(2, 0);
+
+        let n = data[2]; // T
+        let temp = n[0];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(0, 1);
+        let temp = n[1];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(1, 2);
+        let temp[3] = Vector.new(2, 1);
+        let temp = n[2];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(1, 2);
+        let temp = n[3];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 0);
+        let temp[2] = Vector.new(1, 2);
+        let temp[3] = Vector.new(1, 1);
+
+        let n = data[3]; // S
+        let temp = n[0];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(1, 0);
+        let temp[3] = Vector.new(2, 0);
+        let temp = n[1];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(2, 2);
+        let temp = n[2];
+        let temp[0] = Vector.new(0, 2);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(1, 2);
+        let temp[3] = Vector.new(2, 1);
+        let temp = n[3];
+        let temp[0] = Vector.new(0, 0);
+        let temp[1] = Vector.new(0, 1);
+        let temp[2] = Vector.new(1, 1);
+        let temp[3] = Vector.new(1, 2);
+
+        let n = data[4]; // Z
+        let temp = n[0];
+        let temp[0] = Vector.new(0, 0);
+        let temp[1] = Vector.new(1, 0);
+        let temp[2] = Vector.new(1, 1);
+        let temp[3] = Vector.new(2, 1);
+        let temp = n[1];
+        let temp[0] = Vector.new(2, 0);
+        let temp[1] = Vector.new(2, 1);
+        let temp[2] = Vector.new(1, 1);
+        let temp[3] = Vector.new(1, 2);
+        let temp = n[2];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(1, 2);
+        let temp[3] = Vector.new(2, 2);
+        let temp = n[3];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(0, 2);
+        let temp[2] = Vector.new(1, 0);
+        let temp[3] = Vector.new(1, 1);
+
+        let n = data[5]; // J
+        let temp = n[0];
+        let temp[0] = Vector.new(0, 0);
+        let temp[1] = Vector.new(0, 1);
+        let temp[2] = Vector.new(1, 1);
+        let temp[3] = Vector.new(2, 1);
+        let temp = n[1];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(1, 2);
+        let temp[3] = Vector.new(2, 0);
+        let temp = n[2];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 1);
+        let temp[3] = Vector.new(2, 2);
+        let temp = n[3];
+        let temp[0] = Vector.new(0, 2);
+        let temp[1] = Vector.new(1, 0);
+        let temp[2] = Vector.new(1, 1);
+        let temp[3] = Vector.new(1, 2);
+
+        let n = data[6]; // L
+        let temp = n[0];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 0);
+        let temp[3] = Vector.new(2, 1);
+        let temp = n[1];
+        let temp[0] = Vector.new(1, 0);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(1, 2);
+        let temp[3] = Vector.new(2, 0);
+        let temp = n[2];
+        let temp[0] = Vector.new(0, 1);
+        let temp[1] = Vector.new(1, 1);
+        let temp[2] = Vector.new(2, 2);
+        let temp[3] = Vector.new(2, 1);
+        let temp = n[3];
+        let temp[0] = Vector.new(0, 2);
+        let temp[1] = Vector.new(1, 0);
+        let temp[2] = Vector.new(1, 1);
+        let temp[3] = Vector.new(1, 2);
+        return;
+    }
+
+    method void deinit(){
+        var int i, j;
+        var Array temp, n;
+        let i = 0;
+        while(i<7){
+            let j = 0;
+            let temp = data[i];
+            while(j<4){
+                let temp[j] = n;
+                do n.dispose();
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
         return;
     }
 
