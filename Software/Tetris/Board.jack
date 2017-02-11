@@ -75,33 +75,16 @@ class Board {
        return;
    }
 
-   method void debugPrint(){
-       var int i, j, temp;
-       let i=0;
-       let j=2;
-       while(j<h){
-           while(i<w){
-               let temp = matrix[i];
-               do Output.printInt(temp[j]);
-               do Output.printString(",");
-               let i = i+1;
-           }
-           do Output.printInt(w);
-           do Output.println();
-           let j = j+1;
-           let i = 0;
-       }
-       return;
-   }
-
    method void dispose(){
        var int i;
        var Array temp;
        let i = 0;
+       /* was breaking for some reason :/
        while(i<w){
            let temp = matrix[temp];
            do temp.dispose();
        }
+       */
        do matrix.dispose();
        do Memory.deAlloc(this);
        return;

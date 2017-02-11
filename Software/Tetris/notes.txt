@@ -13,6 +13,7 @@ PRNG (seed by waiting for user to start)
 Single highscore
 Different block sprites
 Background Image
+Calibrate game speed to real time with taps 5 1 sec taps avg
 http://tetris.wikia.com/wiki/Tetris_Guideline
 
 0 = I
