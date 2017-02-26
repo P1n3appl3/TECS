@@ -7,19 +7,54 @@ class Game {
         return this;
     }
 
-    method run(){
-
+    method void run(){
+        //poll for inputs and timer
+        //rotate and translate instantly resetting timer
+        return;
     }
 
-    method step(){
-        
+    method void drop(){
+        var int i;
+        var Vector temp;
+        let i = 0;
+        if(~isValid(0, 1)){
+            return;
+        }
+        do current.setY(current.getY()+1);
+        return;
+    }
+
+    method boolean isValid(int a, int b){
+        var int i;
+        let i = 0;
+        while(i < 4){
+            if(current.getSegmentX(i) + a < 22 & current.getSegmentY(i) + b < 10 & current.getSegmentY(i) + b > -1){
+                if(board.get(current.getSegmentX(i)+a, current.getSegmentY(i))+b){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    method void nextPiece(){
+        //do current.dispose(); idk about memory management here
+        let current = next;
+        // let next = generateRandomPiece();
+        return;
     }
 
     method void test(){
         var Piece p;
+        var int i;
+        let i = 0;
         let p = Piece.new(4);
-        do p.setY(1);
-        do p.draw(board);
+        do p.setY(0);
+        while(i<10){
+            do drop();
+            do p.draw(board);
+            do Sys.wait(500);
+        }
         return;
     }
 }
