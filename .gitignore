@@ -1,3 +1,6 @@
 *.out
 *.vm
 *.hack
+*.debug
+*.asm
+!/Software/Project 4/*.asm
