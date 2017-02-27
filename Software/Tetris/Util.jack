@@ -1,5 +1,5 @@
 class Util {
-    
+
     function int mod(int a, int b){
         return a - ((a/b) * b);
     }
@@ -9,5 +9,9 @@ class Util {
             return -a;
         }
         return a;
+    }
+
+    function int rand(){
+        return 1;
     }
 }
