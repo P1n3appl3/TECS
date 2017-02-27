@@ -4,6 +4,8 @@ class Game {
 
     constructor Game new(Board b){
         let board = b;
+        let current = Piece.new(4);
+        let next = Piece.new(6);
         return this;
     }
 
@@ -14,46 +16,70 @@ class Game {
     }
 
     method void drop(){
-        var int i;
         var Vector temp;
-        let i = 0;
         if(~isValid(0, 1)){
+            do lock();
             return;
         }
         do current.setY(current.getY()+1);
         return;
     }
 
+    method void lock(){
+        var int i;
+        let i = 0;
+        while(i<4){
+            do board.set(current.getSegmentX(i), current.getSegmentY(i), true);
+            let i = i + 1;
+        }
+        do nextPiece();
+        return;
+    }
+
+    method boolean rotate(int a){
+        do current.rotate(a);
+        if(isValid(0,0)){
+            return true;
+        }
+        do current.rotate(-a)
+        return false;
+    }
+
     method boolean isValid(int a, int b){
         var int i;
         let i = 0;
         while(i < 4){
-            if(current.getSegmentX(i) + a < 22 & current.getSegmentY(i) + b < 10 & current.getSegmentY(i) + b > -1){
-                if(board.get(current.getSegmentX(i)+a, current.getSegmentY(i))+b){
+            if((current.getSegmentY(i) + b < 22) & (current.getSegmentY(i) + b > -1) & (current.getSegmentX(i) + a < 10) & (current.getSegmentX(i) + a > -1)){
+                if(board.get(current.getSegmentX(i)+a, current.getSegmentY(i)+b)){
                     return false;
                 }
             }
+            else{
+                return false;
+            }
+            let i = i + 1;
         }
         return true;
     }
 
     method void nextPiece(){
-        //do current.dispose(); idk about memory management here
+        do current.dispose(); //idk about memory management here
         let current = next;
-        // let next = generateRandomPiece();
+        let next = Piece.new(5);//generateRandomPiece();
         return;
     }
 
     method void test(){
-        var Piece p;
         var int i;
         let i = 0;
-        let p = Piece.new(4);
-        do p.setY(0);
-        while(i<10){
+        do current.setY(10);
+        while(i<100){
             do drop();
-            do p.draw(board);
-            do Sys.wait(500);
+            do Output.printInt(current.getY());
+            do board.draw();
+            do current.draw(board);
+            do Sys.wait(200);
+            let i = i + 1;
         }
         return;
     }

@@ -11,7 +11,7 @@ class Piece {
         if(type<2){ //I and O pieces are 4 wide so they are placed one more to the left
             let x = 3;
         }
-        let shape = Piece.getPiece(t, 0);
+        let shape = Piece.getPiece(t, rotation);
         return this;
     }
 
@@ -33,6 +33,18 @@ class Piece {
         return y;
     }
 
+    method int getSegmentX(int a){
+        var Vector temp;
+        let temp = shape[a];
+        return temp.getX() + x;
+    }
+
+    method int getSegmentY(int a){
+        var Vector temp;
+        let temp = shape[a];
+        return temp.getY() + y;
+    }
+
     method void draw(Board b){
         var int bx, by, bsize, i, tempX, tempY;
         var Vector temp;
@@ -45,8 +57,8 @@ class Piece {
             let tempY = temp.getY();
             if(tempY+y>1){
                 let tempX = temp.getX();
-                //do Screen.setColor(true);
-                do Screen.drawRectangle(((x+tempX)*bsize)+bx+1, ((y+tempY-2)*bsize)+by-1, ((x+tempX+1)*bsize)+bx+1, ((y+tempY-1)*bsize)+by-1);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(((x+tempX)*bsize)+bx+1, ((y+tempY-2)*bsize)+by+1, ((x+tempX+1)*bsize)+bx-1, ((y+tempY-1)*bsize)+by-1);
             }
             let i = i + 1;
         }
