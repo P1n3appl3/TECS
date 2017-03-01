@@ -15,6 +15,11 @@ class Piece {
         return this;
     }
 
+    method void rotate(int a){
+        let shape = Piece.getPiece(type, Util.mod(rotation+4+a, 4));
+        return;
+    }
+
     method void setX(int a){
         let x = a;
         return;

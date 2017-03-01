@@ -41,7 +41,7 @@ class Game {
         if(isValid(0,0)){
             return true;
         }
-        do current.rotate(-a)
+        do current.rotate(-a);
         return false;
     }
 
@@ -69,17 +69,30 @@ class Game {
         return;
     }
 
+    //130 - 133 left clockwise
+
     method void test(){
-        var int i;
+        var int i, key;
         let i = 0;
         do current.setY(10);
-        while(i<100){
-            do drop();
-            do Output.printInt(current.getY());
+        while(true){
+            while(i<5000){
+                let key = Keyboard.keyPressed();
+                let i = i + 1;
+            }
+            let i = 0;
+            do Output.moveCursor(0,0);
+            do Output.printInt(key);
+            if(key=130 | key=132){
+                if(isValid(key-131, 0)){
+                    do current.setX(key-131);
+                }
+                else{
+                    do drop();
+                }
+            }
             do board.draw();
             do current.draw(board);
-            do Sys.wait(200);
-            let i = i + 1;
         }
         return;
     }
