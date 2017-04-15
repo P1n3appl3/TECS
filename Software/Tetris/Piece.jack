@@ -38,6 +38,10 @@ class Piece {
         return y;
     }
 
+    method int getRotation(){
+        return rotation;
+    }
+
     method int getSegmentX(int a){
         var Vector temp;
         let temp = shape[a];
