@@ -1,0 +1,74 @@
+class Game {
+    field Board board;
+    field boolean running; //0 for pause 1 for play
+    field int x, y;
+
+    constructor Game new(int s){
+        let board = Board.new(s);
+        let x = board.getWidth()/2;
+        let y = board.getHeight()/2;
+        let running = false;
+        return this;
+    }
+
+    method void run(){
+        var int key, temp;
+        var boolean pressed;
+        let key = 0;
+
+        while(~(key=81)){ //q for quit
+            let pressed = true;
+            let temp = Keyboard.keyPressed();
+            if(~(key=temp)){
+                let pressed = false;
+            }
+            let key = temp;
+            if(~pressed & ~(key=0)){
+                if(~running){
+                    if(key=83){ //s for step
+                        do board.step();
+                        do board.flip();
+                    }
+                    if((key=88) | (key=90)){ //x or z for toggle
+                        do board.set(x, y, ~board.get(x, y));
+                        do board.flip();
+                    }
+                    if((key=130) | (key=132)){ //left and right
+                        let x = Util.mod(x+board.getWidth()+key-131, board.getWidth());
+                    }
+                    if((key=131) | (key=133)){ //up and down
+                        let y = Util.mod(y+board.getHeight()+key-132, board.getHeight());
+                    }
+                }
+                if((key=32)|(key=128)){ //enter or space for start
+                    let running = ~running;
+                }
+                if(key=129){ //backspace for clear
+                    do board.clear();
+                    let running = false;
+                }
+                do drawCursor();
+            }
+            if(running){
+                do board.step();
+                do board.flip();
+                do board.draw();
+            }
+        }
+        return;
+    }
+
+    method void drawCursor(){
+        var int s;
+        do board.draw();
+        do Screen.setColor(~board.get(x,y));
+        let s = board.getSize();
+        do Screen.drawCircle(board.getX()+(x*s)+(s/2), board.getY()+(y*s)+(s/2), s/3);
+        return;
+    }
+
+    method void dispose(){
+        do board.dispose();
+        return;
+    }
+}
