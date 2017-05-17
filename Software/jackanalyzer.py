@@ -211,7 +211,7 @@ class CompilationEngine:
         self.writer.write("<expressionList>\n")
         if self.t.token != ')':
             self.compileExpression()
-        if self.t.token == ',':
+        while self.t.token == ',':
             self.writeToken()
             self.compileExpression()
         self.writer.write("</expressionList>\n")
@@ -228,12 +228,12 @@ class CompilationEngine:
         self.writer.write("<term>\n")
         if self.t.token in "~-":
             self.writeToken()
-            self.CompileTerm()
-        elif self.t.tokenType != "identifier":
-            self.writeToken()
+            self.compileTerm()
         elif self.t.token == '(':
             self.writeToken()
             self.compileExpression()
+            self.writeToken()
+        elif self.t.tokenType != "identifier":
             self.writeToken()
         else:
             self.writeToken()
