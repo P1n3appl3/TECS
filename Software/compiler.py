@@ -1,6 +1,7 @@
-# JACK syntax analyzer by Joseph Ryan
+# JACK to VM compiler by Joseph Ryan
 import sys
 import os
+
 
 class Tokenizer:
     symbols = "{}()[].,;+-*/&|~<>="
@@ -16,9 +17,9 @@ class Tokenizer:
         return self.tokenType, self.token
 
     def parseInt(self):
-        i=1
+        i = 1
         while self.line[i].isdigit():
-            i+=1
+            i += 1
         self.tokenType = "integerConstant"
         self.token = self.line[:i]
         self.line = self.line[i:]
@@ -34,7 +35,7 @@ class Tokenizer:
         self.line = self.line[1:]
 
     def parseKeyword(self):
-        for i in range(2,max(len(self.line), 11)):
+        for i in range(2, max(len(self.line), 11)):
             if self.line[:i] in self.keywords:
                 self.tokenType = "keyword"
                 self.token = self.line[:i]
@@ -43,24 +44,24 @@ class Tokenizer:
         return False
 
     def parseIdentifier(self):
-        i=1
-        while self.line[i].isalnum() or self.line[i]=='_':
-            i+=1
+        i = 1
+        while self.line[i].isalnum() or self.line[i] == '_':
+            i += 1
         self.tokenType = "identifier"
         self.token = self.line[:i]
         self.line = self.line[i:]
 
     def skip(self):
         while True:
-            if self.line == "\n" or self.line[:2] == "//":      #skip single line comments and empty lines
+            if self.line == "\n" or self.line[:2] == "//":  # skip single line comments and empty lines
                 self.line = self.reader.readline().lstrip(' \t')
-            elif self.line[:2] == "/*":     #skip everything until end of block/api comment is found
+            elif self.line[:2] == "/*":  # skip everything until end of block/api comment is found
                 while "*/" not in self.line:
                     self.line = self.reader.readline().lstrip(' \t')
                     if self.line == "":
                         return False
-                self.line = self.line[self.line.find("*/")+2:]
-            elif self.line == "":       #readline() only reads empty string at EOF
+                self.line = self.line[self.line.find("*/") + 2:]
+            elif self.line == "":  # readline() only reads empty string at EOF
                 return False
             else:
                 return True
@@ -83,17 +84,19 @@ class Tokenizer:
     def __del__(self):
         self.reader.close()
 
+
 class CompilationEngine:
+
     def __init__(self, fileName):
-        self.writer = open(fileName.split('.')[0]+".xml", 'w')
+        self.writer = open(fileName.split('.')[0] + ".xml", 'w')
         self.t = Tokenizer(fileName)
         self.t.advance()
 
     def writeToken(self, n=1):
         for i in range(n):
             tempType = '<' + self.t.tokenType + '>'
-            tempToken = self.t.token.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;')
-            self.writer.write('<' + self.t.tokenType + '> '+ tempToken + ' </' + self.t.tokenType + '>\n')
+            tempToken = self.t.token.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+            self.writer.write('<' + self.t.tokenType + '> ' + tempToken + ' </' + self.t.tokenType + '>\n')
             self.t.advance()
 
     def compileClass(self):
@@ -265,4 +268,4 @@ if len(sys.argv) > 1:
         c = CompilationEngine(f)
         c.compileClass()
 else:
-    print "usage: jackanalyzer.py [options] source[.jack]\n\tsourceFile(s) may be file or directory.\noptions:\n\t"
+    print "usage: compiler.py source[.jack]\n\tsourceFile(s) may be file or directory.\n"
