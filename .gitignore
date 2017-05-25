@@ -3,4 +3,5 @@
 *.hack
 *.debug
 *.asm
+*.xml
 !/Software/Project 4/*.asm
