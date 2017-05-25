@@ -48,7 +48,7 @@ class Tokenizer:
         self.token = self.line[:i]
         self.line = self.line[i:]
 
-    def skip(self):
+    def nextToken(self):
         while True:
             if self.line == "\n" or self.line[:2] == "//":  # skip single line comments and empty lines
                 self.line = self.reader.readline().lstrip(' \t')
@@ -65,7 +65,7 @@ class Tokenizer:
 
     def advance(self):
         self.line = self.line.lstrip(' \t')
-        if not self.skip():
+        if not self.nextToken():
             return False
         if self.line[0].isdigit():
             self.parseInt()
@@ -417,8 +417,14 @@ if len(sys.argv) > 1:
         for i in os.listdir(fName):
             if i.endswith(".jack"):
                 files.append(fName + '/' + i)
+    if "-m" not in sys.argv:
+        print "Parsing " + str(len(files)) + " file(s)"
     for f in files:
+        if "-m" not in sys.argv:
+            print "Compiling " + f.split('/')[-1]
         c = CompilationEngine(f)
         c.compileClass()
+    if "-m" not in sys.argv:
+        print "Compilation Complete"
 else:
-    print "usage: compiler.py [options] source[.jack]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-x write syntax analysis xml file"
+    print "usage: compiler.py [options] source[.jack]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-m mutes status messages\n\t-x creates syntax analysis xml file"

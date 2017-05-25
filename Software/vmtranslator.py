@@ -60,7 +60,6 @@ class CodeWriter:
                      self.currentFunction + '$' + lbl + "\nD;JNE\n")
 
     def writeFunction(self, functionName, localNum):
-        #self.currentFunction = self.currentFile + '.' + functionName
         self.currentFunction = functionName
         self.f.write("(" + self.currentFunction + ")\n")
         if localNum == 1:
@@ -74,7 +73,8 @@ class CodeWriter:
 
     def writeCall(self, functionName, argNum):
         returnAddress = "ReturnAddress" + str(self.labelNum["call"])
-        self.f.write("@" + functionName + "\nD=A\n@R13\nM=D\n@" + str(argNum + 5) + "\nD=A\n@R14\nM=D\n@" + returnAddress + "\nD=A\n@CALLLBL\n0;JMP\n(" + returnAddress + ")\n")
+        self.f.write("@" + functionName + "\nD=A\n@R13\nM=D\n@" + str(argNum + 5) +
+                     "\nD=A\n@R14\nM=D\n@" + returnAddress + "\nD=A\n@CALLLBL\n0;JMP\n(" + returnAddress + ")\n")
         self.labelNum["call"] += 1
 
     def writeArithmetic(self, command):
@@ -148,9 +148,10 @@ if len(sys.argv) > 1:
         for i in os.listdir(fName):
             if i.endswith(".vm"):
                 files.append(fName + '/' + i)
+    fName = fName.split('.')[0]
     if "-m" not in sys.argv:
         print "Parsing " + str(len(files)) + " file(s)"
-    cw = CodeWriter(fName.split('.')[0])
+    cw = CodeWriter(fName + '/' + fName)
     if "-b" not in sys.argv:
         cw.writeInit()
     for f in files:
@@ -182,16 +183,14 @@ if len(sys.argv) > 1:
     cw.close()
     if "-l" in sys.argv:
         lineNum = 0
-        with open(fName.split('.')[0] + ".asm", 'r') as src:
-            with open(fName.split('.')[0] + ".debug", 'w') as dest:
+        with open(fName + '/' + fName + ".asm", 'r') as src:
+            with open(fName + '/' + fName + ".debug", 'w') as dest:
                 for line in src:
                     if not line.startswith('(') and not line.startswith('//') and not line == '\n':
                         dest.write(str(lineNum) + '\t\t')
                         lineNum += 1
-                    if '-p' in sys.argv:
-                        print line,
                     dest.write(line)
     if "-m" not in sys.argv:
         print "Translation Complete"
 else:
-    print "usage: vmtranslator.py [options] source[.vm]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-m mutes status messages\n\t-c writes vm commands as comments in .asm file\n\t-b doesn't generate bootstrap code\n\t-l creates source.debug with adjusted line numbers\n\t-p prints output to stdout"
+    print "usage: vmtranslator.py [options] source[.vm]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-m mutes status messages\n\t-c writes vm commands as comments in .asm file\n\t-b doesn't generate bootstrap code\n\t-l creates source.debug with adjusted line numbers"
