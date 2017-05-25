@@ -13,9 +13,6 @@ class Tokenizer:
         self.tokenType = ""
         self.line = self.reader.readline().lstrip(' \t')
 
-    def getToken(self):
-        return self.tokenType, self.token
-
     def parseInt(self):
         i = 1
         while self.line[i].isdigit():
@@ -81,70 +78,96 @@ class Tokenizer:
                 self.parseIdentifier()
         return True
 
-    def __del__(self):
-        self.reader.close()
-
 
 class CompilationEngine:
 
     def __init__(self, fileName):
-        self.writer = open(fileName.split('.')[0] + ".xml", 'w')
+        if '-x' in sys.argv:
+            self.writer = open(fileName.split('.')[0] + ".xml", 'w')
         self.t = Tokenizer(fileName)
         self.t.advance()
+        self.vm = VMWriter(fileName)
+        self.table = None
+        self.classTable = SymbolTable()
+
+    def writeXML(self, s):
+        if '-x' in sys.argv:
+            self.writer.write(s + '\n')
 
     def writeToken(self, n=1):
         for i in range(n):
             tempType = '<' + self.t.tokenType + '>'
             tempToken = self.t.token.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
-            self.writer.write('<' + self.t.tokenType + '> ' + tempToken + ' </' + self.t.tokenType + '>\n')
+            self.writeXML('<' + self.t.tokenType + '> ' + tempToken + ' </' + self.t.tokenType + '>')
             self.t.advance()
 
     def compileClass(self):
-        self.writer.write("<class>\n")
-        self.writeToken(3)
+        self.writeXML("<class>")
+        self.writeToken()
+        self.className = self.t.token
+        self.writeToken(2)
         while self.t.token in ("static", "field"):
             self.compileClassVarDec()
         while self.t.token != '}':
             self.compileSubroutine()
         self.writeToken()
-        self.writer.write("</class>\n")
+        self.writeXML("</class>")
 
     def compileClassVarDec(self):
-        self.writer.write("<classVarDec>\n")
+        self.writeXML("<classVarDec>")
         while self.t.token != ';':
             self.writeToken()
         self.writeToken()
-        self.writer.write("</classVarDec>\n")
+        self.writeXML("</classVarDec>")
 
     def compileSubroutine(self):
-        self.writer.write("<subroutineDec>\n")
-        self.writeToken(4)
+        self.whileCount = 0
+        self.ifCount = 0
+        self.writeXML("<subroutineDec>")
+        self.table = SymbolTable()
+        self.writeToken()
+        self.functionType = self.t.token
+        self.writeToken()
+        functionName = self.t.token
+        self.writeToken(2)
         self.compileParameterList()
         self.writeToken()
-        self.writer.write("<subroutineBody>\n")
+        self.writeXML("<subroutineBody>")
         self.writeToken()
         while self.t.token == "var":
             self.compileVarDec()
+        varNum = len([i for i in self.table.table if self.table.getKind(i) == "local"])
+        self.vm.writeFunction(self.className + '.' + functionName, varNum)
         self.compileStatements()
         self.writeToken()
-        self.writer.write("</subroutineBody>\n")
-        self.writer.write("</subroutineDec>\n")
+        self.writeXML("</subroutineBody>")
+        self.writeXML("</subroutineDec>")
 
     def compileParameterList(self):
-        self.writer.write("<parameterList>\n")
+        self.writeXML("<parameterList>")
         while self.t.token != ')':
+            type = self.t.token
             self.writeToken()
-        self.writer.write("</parameterList>\n")
+            self.table.add(self.t.token, type, "argument")
+            self.writeToken()
+            if self.t.token == ',':
+                self.writeToken()
+        self.writeXML("</parameterList>")
 
     def compileVarDec(self):
-        self.writer.write("<varDec>\n")
+        self.writeXML("<varDec>")
+        self.writeToken()
+        type = self.t.token
+        self.writeToken()
         while self.t.token != ';':
+            if self.t.token != ',':
+                self.table.add(self.t.token, type, "local")
             self.writeToken()
         self.writeToken()
-        self.writer.write("</varDec>\n")
+        self.writeXML("</varDec>")
 
     def compileStatements(self):
-        self.writer.write("<statements>\n")
+        self.writeXML("<statements>")
         while self.t.token != '}':
             if self.t.token == 'let':
                 self.compileLet()
@@ -156,21 +179,29 @@ class CompilationEngine:
                 self.compileWhile()
             elif self.t.token == 'return':
                 self.compileReturn()
-        self.writer.write("</statements>\n")
+        self.writeXML("</statements>")
 
     def compileDo(self):
-        self.writer.write("<doStatement>\n")
-        self.writeToken(2)
-        if self.t.token == '.':
-            self.writeToken(2)
+        self.writeXML("<doStatement>")
         self.writeToken()
-        self.compileExpressionList()
+        name = self.t.token
+        self.writeToken()
+        if self.t.token == '.':
+            self.writeToken()
+            name += '.' + self.t.token
+            self.writeToken()
+        self.writeToken()
+        argNum = self.compileExpressionList()
         self.writeToken(2)
-        self.writer.write("</doStatement>\n")
+        self.vm.writeCall(name, argNum)
+        self.vm.writePop("temp", 0)
+        self.writeXML("</doStatement>")
 
     def compileLet(self):
-        self.writer.write("<letStatement>\n")
-        self.writeToken(2)
+        self.writeXML("<letStatement>")
+        self.writeToken()
+        name = self.t.token
+        self.writeToken()
         if self.t.token == '[':
             self.writeToken()
             self.compileExpression()
@@ -178,67 +209,111 @@ class CompilationEngine:
         self.writeToken()
         self.compileExpression()
         self.writeToken()
-        self.writer.write("</letStatement>\n")
+        t = self.table
+        if not t.has(name):
+            t = self.classTable
+        if t.getKind(name) != "field":
+            self.vm.writePop(t.getKind(name), t.getCount(name))
+        else:
+            pass
+            # object handling
+        self.writeXML("</letStatement>")
 
     def compileWhile(self):
-        self.writer.write("<whileStatement>\n")
+        currentCount = self.whileCount
+        self.whileCount += 1
+        self.writeXML("<whileStatement>")
         self.writeToken(2)
+        self.vm.writeLabel("WHILE_EXP" + str(currentCount))
         self.compileExpression()
+        self.vm.writeUnary('~')
+        self.vm.writeIf("WHILE_END" + str(currentCount))
         self.writeToken(2)
         self.compileStatements()
+        self.vm.writeGoto("WHILE_EXP" + str(currentCount))
         self.writeToken()
-        self.writer.write("</whileStatement>\n")
+        self.vm.writeLabel("WHILE_END" + str(currentCount))
+        self.writeXML("</whileStatement>")
 
     def compileIf(self):
-        self.writer.write("<ifStatement>\n")
+        currentCount = self.ifCount
+        self.ifCount += 1
+        self.writeXML("<ifStatement>")
         self.writeToken(2)
         self.compileExpression()
+        self.vm.writeIf("IF_TRUE" + str(currentCount))
+        self.vm.writeGoto("IF_FALSE" + str(currentCount))
+        self.vm.writeLabel("IF_TRUE" + str(currentCount))
         self.writeToken(2)
         self.compileStatements()
         self.writeToken()
+        self.vm.writeGoto("IF_END" + str(currentCount))
+        self.vm.writeLabel("IF_FALSE" + str(currentCount))
         if self.t.token == "else":
             self.writeToken(2)
             self.compileStatements()
             self.writeToken()
-        self.writer.write("</ifStatement>\n")
+        self.vm.writeLabel("IF_END" + str(currentCount))
+        self.writeXML("</ifStatement>")
 
     def compileReturn(self):
-        self.writer.write("<returnStatement>\n")
+        self.writeXML("<returnStatement>")
         self.writeToken()
         if self.t.token != ';':
             self.compileExpression()
         self.writeToken()
-        self.writer.write("</returnStatement>\n")
+        if self.functionType == "void":
+            self.vm.writePush("constant", 0)
+        self.vm.writeReturn()
+        self.writeXML("</returnStatement>")
 
     def compileExpressionList(self):
-        self.writer.write("<expressionList>\n")
+        self.writeXML("<expressionList>")
+        n = 0
         if self.t.token != ')':
             self.compileExpression()
+            n = 1
         while self.t.token == ',':
+            n += 1
             self.writeToken()
             self.compileExpression()
-        self.writer.write("</expressionList>\n")
+        self.writeXML("</expressionList>")
+        return n
 
     def compileExpression(self):
-        self.writer.write("<expression>\n")
+        self.writeXML("<expression>")
         self.compileTerm()
-        if self.t.token in "+-*/&|~<>=":
+        while self.t.token in "+-*/&|~<>=":
+            op = self.t.token
             self.writeToken()
             self.compileTerm()
-        self.writer.write("</expression>\n")
+            self.vm.writeArithmetic(op)
+        self.writeXML("</expression>")
 
     def compileTerm(self):
-        self.writer.write("<term>\n")
+        self.writeXML("<term>")
         if self.t.token in "~-":
+            op = self.t.token
             self.writeToken()
             self.compileTerm()
+            self.vm.writeUnary(op)
         elif self.t.token == '(':
             self.writeToken()
             self.compileExpression()
             self.writeToken()
         elif self.t.tokenType != "identifier":
+            if self.t.tokenType == "integerConstant":
+                self.vm.writePush("constant", self.t.token)
+            elif self.t.token in ("true", "false"):
+                self.vm.writePush("constant", 0)
+                if self.t.token == "true":
+                    self.vm.writeUnary('~')
+            else:
+                # string code
+                pass
             self.writeToken()
         else:
+            name = self.t.token
             self.writeToken()
             if self.t.token == '[':
                 self.writeToken()
@@ -246,14 +321,92 @@ class CompilationEngine:
                 self.writeToken()
             elif self.t.token in "(.":
                 if self.t.token == '.':
-                    self.writeToken(2)
+                    self.writeToken()
+                    name += '.' + self.t.token
+                    self.writeToken()
                 self.writeToken()
-                self.compileExpressionList()
+                argNum = self.compileExpressionList()
                 self.writeToken()
-        self.writer.write("</term>\n")
+                self.vm.writeCall(name, argNum)
+            else:
+                t = self.table
+                if not t.has(name):
+                    t = self.classTable
+                if t.getKind(name) != "field":
+                    self.vm.writePush(t.getKind(name), t.getCount(name))
+                else:
+                    pass
+                    # object handling
+        self.writeXML("</term>")
+
+
+class SymbolTable:
+
+    def __init__(self):
+        self.count = {"static": 0, "field": 0, "argument": 0, "local": 0}
+        self.table = {}
+
+    def __str__(self):
+        n = ""
+        for i in self.table:
+            n += i + ' ' + str(self.table[i]) + '\n'
+        return n
+
+    def has(self, n):
+        return n in self.table
+
+    def add(self, n, type, kind):
+        self.table[n] = (type, kind, self.count[kind])
+        self.count[kind] += 1
+
+    def getType(self, n):
+        return self.table[n][0]
+
+    def getKind(self, n):
+        return self.table[n][1]
+
+    def getCount(self, n):
+        return self.table[n][2]
+
+
+class VMWriter:
+
+    def __init__(self, fileName):
+        self.writer = open(fileName.split('.')[0] + ".vm", 'w')
+
+    def writeArithmetic(self, op):
+        self.writer.write({'+': "add", '-': "sub", '>': "gt", '<': "lt", '&': "and", '|': "or", '=': "eq", '*': "call Math.multiply 2", '/': "call Math.divide 2"}[op] + '\n')
+
+    def writeUnary(self, op):
+        self.writer.write({'-': "neg", '~': "not"}[op] + '\n')
+
+    def writeFunction(self, name, args):
+        self.writer.write("function " + name + ' ' + str(args) + '\n')
+
+    def writePush(self, type, n):
+        self.writer.write("push " + type + ' ' + str(n) + '\n')
+
+    def writePop(self, type, n):
+        self.writer.write("pop " + type + ' ' + str(n) + '\n')
+
+    def writeReturn(self):
+        self.writer.write("return\n")
+
+    def writeCall(self, name, args):
+        self.writer.write("call " + name + ' ' + str(args) + '\n')
+
+    def writeLabel(self, name):
+        self.writer.write("label " + name + '\n')
+
+    def writeIf(self, name):
+        self.writer.write("if-goto " + name + '\n')
+
+    def writeGoto(self, name):
+        self.writer.write("goto " + name + '\n')
 
     def __del__(self):
         self.writer.close()
+
 
 if len(sys.argv) > 1:
     files = []
@@ -268,4 +421,4 @@ if len(sys.argv) > 1:
         c = CompilationEngine(f)
         c.compileClass()
 else:
-    print "usage: compiler.py source[.jack]\n\tsourceFile(s) may be file or directory.\n"
+    print "usage: compiler.py [options] source[.jack]\n\tsourceFile(s) may be file or directory.\noptions:\n\t-x write syntax analysis xml file"
