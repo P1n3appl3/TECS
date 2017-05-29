@@ -33,7 +33,7 @@ class Tokenizer:
 
     def parseKeyword(self):
         for i in range(2, max(len(self.line), 11)):
-            if self.line[:i] in self.keywords:
+            if self.line[:i] in self.keywords and not self.line[i].isalpha():
                 self.tokenType = "keyword"
                 self.token = self.line[:i]
                 self.line = self.line[i:]
@@ -186,7 +186,6 @@ class CompilationEngine:
     def compileStatements(self):
         self.writeXML("<statements>")
         while self.t.token != '}':
-            print self.t.line
             if self.t.token == 'let':
                 self.compileLet()
             elif self.t.token == 'do':
