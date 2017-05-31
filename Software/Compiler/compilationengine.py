@@ -267,7 +267,7 @@ class CompilationEngine:
 
     def compileTerm(self):
         self.writeXML("<term>")
-        if self.t.token in "~-":
+        if self.t.token in "~-" and self.t.token != '':
             op = self.t.token
             self.writeToken()
             self.compileTerm()
