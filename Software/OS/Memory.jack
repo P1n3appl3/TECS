@@ -1,0 +1,80 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * This library provides two services: direct access to the computer's main
+ * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
+ * consists of 32,768 words, each holding a 16-bit binary number.
+ */
+class Memory {
+    static Array mem;
+    static Array freeList;
+
+    /** Initializes the class. */
+    function void init() {
+        let freeList = 2048; // Heap starts at 2048
+        let freeList[0] = null; //Never allocate to the head of the heap
+        let freeList[1] = 2050; // Next
+        let freeList[2] = 14333; // Ends at 16383
+        let freeList[3] = null;
+        return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+        return mem[address];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+        let mem[address] = value;
+        return;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. This implementation uses
+     *  first fit as opposed to best fit. */
+    function int alloc(int size) {
+        var Array current, prev, temp;
+        var int remainder;
+        if(~(size > 0)){
+            do Sys.error(5);
+        }
+        let current = freeList;
+        while(~(current[1] = null)){
+            let prev = current;
+            let current = current[1];
+            if(~(size > current[0])){
+                let temp = current + 1;
+                if((current[0] - size) < 5){ // Minimum block size
+                    let prev[1] = current[1];
+                }
+                else{
+                    let prev[1] = temp + size;
+                    let remainder = current[0] - (size + 1); // +1 for the size bookkeeping
+                    let current = prev[1];
+                    let current[0] = remainder;
+                    let current[1] = temp[0];
+                }
+                return temp;
+            }
+        }
+        do Sys.error(6);
+    }
+
+    /** De-allocates the given object (cast as an array) by making
+     *  it available for future allocations. */
+    function void deAlloc(Array o) {
+        var Array current;
+        let o = o - 1;
+        let o[1] = null;
+        let current = freeList;
+        while(~(current[1] = null)){
+            let current = current[1];
+        }
+        let current[1] = o;
+        return;
+    }
+}
