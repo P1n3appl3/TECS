@@ -65,47 +65,41 @@ static Array mask;
         return sum;
     }
 
-    /** Returns the integer part of x/y.
+    /** Returns the integer part of n/d.
      *  When a Jack compiler detects the multiplication operator '/' in the
      *  program's code, it handles it by invoking this method. In other words,
-     *  the Jack expressions x/y and divide(x,y) return the same value.
+     *  the Jack expressions n/d and divide(n,d) return the same value.
      */
-    function int divide(int x, int y) {
-        var int result;
+    function int divide(int n, int d){
+        var int result, a, b;
         var boolean negative;
-        if(y = 0){
+        if(d = 0){
             do Sys.error(3);
         }
         let negative = false;
-        if(x < 0){
+        if(n < 0){
             let negative = true;
         }
-        if(y < 0){
+        if(d < 0){
             let negative = ~negative;
         }
-        let x = Math.abs(x);
-        let y = Math.abs(y);
-        let result = Math.div(x, y);
+        let n = Math.abs(n);
+        let d = Math.abs(d);
+        let result = 0;
+        while(~(n < d)){
+            let a = d;
+            let b = 1;
+            while((a + a) < n){
+                let a = a + a;
+                let b = b + b;
+            }
+            let result = result + b;
+            let n = n - a;
+        }
         if(negative){
             let result = -result;
         }
         return result;
-    }
-
-    /** The recursive part.
-     *  Since error and negative checking only have to be done once.
-     */
-    function int div(int x, int y){
-        var int q, temp;
-        if(y > x){
-            return 0;
-        }
-        let q = Math.divide(x, y + y);
-        let temp = q * y;       //todo: optimize to only require addition
-        if((x - (temp + temp)) < y){
-            return q + q;
-        }
-        return q + q + 1;
     }
 
     /** Returns the integer part of the square root of x. */
