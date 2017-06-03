@@ -52,7 +52,7 @@ class String {
     /** Sets the character at the j-th location of this string to c. */
     method void setCharAt(int j, char c) {
         if((j < 0) | (j > len)){
-            do Sys.error(15);
+            do Sys.error(16);
         }
         let contents[j] = c;
         return;
