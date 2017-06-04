@@ -267,7 +267,14 @@ class CompilationEngine:
 
     def compileTerm(self):
         self.writeXML("<term>")
-        if self.t.token in "~-" and self.t.token != '':
+        if self.t.tokenType == "stringConstant":
+            self.vm.writePush("constant", len(self.t.token))
+            self.vm.writeCall("String.new", 1)
+            for i in self.t.token:
+                self.vm.writePush("constant", ord(i))
+                self.vm.writeCall("String.appendChar", 2)
+                self.writeToken()
+        elif self.t.token in "~-" and self.t.token != '':
             op = self.t.token
             self.writeToken()
             self.compileTerm()
@@ -293,12 +300,6 @@ class CompilationEngine:
         else:
             if self.t.tokenType == "integerConstant":
                 self.vm.writePush("constant", self.t.token)
-            elif self.t.tokenType == "stringConstant":
-                self.vm.writePush("constant", len(self.t.token))
-                self.vm.writeCall("String.new", 1)
-                for i in self.t.token:
-                    self.vm.writePush("constant", ord(i))
-                    self.vm.writeCall("String.appendChar", 2)
             elif self.t.tokenType == "keyword":  # this/null/false/true
                 if self.t.token == "this":
                     self.vm.writePush("pointer", 0)
