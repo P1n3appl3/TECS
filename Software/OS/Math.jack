@@ -1,14 +1,9 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/12/Math.jack
-
 /**
  * A library of commonly used mathematical functions.
  * Note: Jack compilers implement multiplication and division using OS method calls.
  */
 class Math {
-static Array mask;
+    static Array mask;
 
     /** Initializes the library. */
     function void init() {

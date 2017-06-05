@@ -7,10 +7,10 @@ class Keyboard {
     /** Initializes the keyboard. */
     function void init() {
         var int i;
-        let buffer = String.new(128);    // Max input size
+        let buffer = String.new(128);   // Max input size
         let i = 0;
         while(i < 128){
-            do buffer.appendChar(32);  // Fill buffer
+            do buffer.appendChar(32);   // Fill buffer
             let i = i + 1;
         }
         return;
@@ -76,7 +76,7 @@ class Keyboard {
         let temp = 129;
         do Output.printString(message);
         while(~(temp = 128)){   //enter
-            if(temp = 129){   //backspace
+            if(temp = 129){     //backspace
                 if(pos > 0){
                     do Output.backSpace();
                     let pos = pos - 1;
