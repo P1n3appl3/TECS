@@ -273,7 +273,7 @@ class CompilationEngine:
             for i in self.t.token:
                 self.vm.writePush("constant", ord(i))
                 self.vm.writeCall("String.appendChar", 2)
-                self.writeToken()
+            self.writeToken()
         elif self.t.token in "~-" and self.t.token != '':
             op = self.t.token
             self.writeToken()
