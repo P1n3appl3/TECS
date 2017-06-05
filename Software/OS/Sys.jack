@@ -1,8 +1,3 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/12/Sys.jack
-
 /**
  * A library that supports various program execution services.
  */
@@ -26,18 +21,18 @@ class Sys {
 
     /** Waits approximately duration milliseconds and returns.  */
     function void wait(int duration) {
-        var String delay;       // Adjust delay based on CPU speed of host computer
+        var int delay;
         if(duration < 0){
             do Sys.error(1);
         }
-        let delay = "3333";    // I know this looks dumb but trust me it's the only thing slow enough
+        let delay = 500;    // Adjust based on cpu speed
         while(duration > 0){
-            while(String.intValue(delay) > 0){
-                do delay.setInt(String.intValue(delay) - 1);
+            while(delay > 0){
+                let delay = delay - 1;
             }
+            let delay = 500;
             let duration = duration - 1;
         }
-        do Memory.deAlloc(delay);
         return;
     }
 
