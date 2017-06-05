@@ -7,16 +7,18 @@ from codewriter import CodeWriter
 if len(sys.argv) > 1:
     files = []
     fName = sys.argv[-1].replace('\\', '/')
+    tempName = fName.split('.')[0]
     if fName.endswith(".vm"):
         files.append(fName)
+        fName = tempName
     else:
         for i in os.listdir(fName):
             if i.endswith(".vm"):
                 files.append(fName + '/' + i)
-    fName = fName.split('.')[0]
+        fName = tempName + '/' + tempName.split('/')[-1]
     if "-m" not in sys.argv:
         print "Parsing " + str(len(files)) + " file(s)"
-    cw = CodeWriter(fName + '/' + fName)
+    cw = CodeWriter(fName)
     if "-b" not in sys.argv:
         cw.writeInit()
     for f in files:
@@ -48,8 +50,8 @@ if len(sys.argv) > 1:
     cw.close()
     if "-l" in sys.argv:
         lineNum = 0
-        with open(fName + '/' + fName + ".asm", 'r') as src:
-            with open(fName + '/' + fName + ".debug", 'w') as dest:
+        with open(fName + ".asm", 'r') as src:
+            with open(fName + ".debug", 'w') as dest:
                 for line in src:
                     if not line.startswith('(') and not line.startswith('//') and not line == '\n':
                         dest.write(str(lineNum) + '\t\t')
