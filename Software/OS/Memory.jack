@@ -1,8 +1,3 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/12/Memory.jack
-
 /**
  * This library provides two services: direct access to the computer's main
  * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
@@ -35,7 +30,7 @@ class Memory {
 
     /** Finds an available RAM block of the given size and returns
      *  a reference to its base address. This implementation uses
-     *  first fit as opposed to best fit. */
+     *  first fit linked list as opposed to best fit. */
     function int alloc(int size) {
         var Array current, prev, temp;
         var int remainder;
@@ -53,7 +48,8 @@ class Memory {
                 }
                 else{
                     let prev[1] = temp + size;
-                    let remainder = current[0] - (size + 1); // +1 for the size bookkeeping
+                    let remainder = current[0] - (size + 1); // +1 for the size bookkeeping word
+                    let current[0] = size; // Size of allocated block
                     let current = prev[1];
                     let current[0] = remainder;
                     let current[1] = temp[0];
