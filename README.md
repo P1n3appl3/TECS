@@ -4,7 +4,7 @@ nand2tetris course work
 # Software
 ## Compiler (.jack -> .vm)
 ```
-usage: python Compiler/main.py [options] source[.jack]
+usage: python Software/Compiler/main.py [options] source[.jack]
         sourceFile(s) may be file or directory.
 options:
         -m mutes status messages
@@ -12,7 +12,7 @@ options:
 ```
 ## VM Translator (.vm -> .asm)
 ```
-usage: python VMTranslator/main.py [options] source[.vm]
+usage: python Software/VMTranslator/main.py [options] source[.vm]
         sourceFile(s) may be file or directory.
 options:
         -m mutes status messages
@@ -22,7 +22,7 @@ options:
 ```
 ## Assembler (.asm -> .hack)
 ```
-usage: python assembler.py sourceFile[.asm]
+usage: python Software/assembler.py sourceFile[.asm]
 options:
         -m mutes status messages
         -p prints output to stdout
