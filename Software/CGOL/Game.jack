@@ -34,10 +34,10 @@ class Game {
                         do board.flip();
                     }
                     if((key=130) | (key=132)){ //left and right
-                        let x = Util.mod(x+board.getWidth()+key-131, board.getWidth());
+                        let x = Math.mod(x+board.getWidth()+key-131, board.getWidth());
                     }
                     if((key=131) | (key=133)){ //up and down
-                        let y = Util.mod(y+board.getHeight()+key-132, board.getHeight());
+                        let y = Math.mod(y+board.getHeight()+key-132, board.getHeight());
                     }
                 }
                 if((key=32)|(key=128)){ //enter or space for start

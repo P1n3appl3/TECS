@@ -5,7 +5,7 @@ class Board {
     constructor Board new(int s){
         var int i;
         let width = 512/s;
-        let x = (512-(width*s)) / 2; //marginally faster than calling Util.mod()
+        let x = (512-(width*s)) / 2; //marginally faster than calling Math.mod()
         let height = 256/s;
         let y = (256-(height*s)) / 2;
         let i = 0;
@@ -63,10 +63,10 @@ class Board {
             while(j<height){
                 // inline the neighbor checks and mod computations because it's faster than a loop
                 let neighbors = 0;
-                let iup = Util.mod(i+1+width, width);
-                let idown = Util.mod(i-1+width, width);
-                let jup = Util.mod(j+1+height, height);
-                let jdown = Util.mod(j-1+height, height);
+                let iup = Math.mod(i+1+width, width);
+                let idown = Math.mod(i-1+width, width);
+                let jup = Math.mod(j+1+height, height);
+                let jdown = Math.mod(j-1+height, height);
                 // using weakly typed true == -1
                 let neighbors = neighbors - get(iup, jup);
                 let neighbors = neighbors - get(iup, j);
@@ -152,6 +152,16 @@ class Board {
            }
            let j = j+1;
            let i = 0;
+       }
+       return;
+   }
+
+   function void dispose2DArray(Array arr, int size){
+       var int i, temp;
+       let i=0;
+       while(i<size){
+           let temp = arr[i];
+           do Array.dispose(temp);
        }
        return;
    }

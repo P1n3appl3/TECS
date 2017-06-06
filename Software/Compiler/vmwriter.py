@@ -4,7 +4,7 @@ class VMWriter:
         self.writer = open(fileName.split('.')[0] + ".vm", 'w')
 
     def writeArithmetic(self, op):
-        self.writer.write({'+': "add", '-': "sub", '>': "gt", '<': "lt", '&': "and", '|': "or", '=': "eq", '*': "call Math.multiply 2", '/': "call Math.divide 2"}[op] + '\n')
+        self.writer.write({'+': "add", '-': "sub", '>': "gt", '<': "lt", '&': "and", '|': "or", '=': "eq", '*': "call Math.multiply 2", '/': "call Math.divide 2", '%': "call Math.mod 2"}[op] + '\n')
 
     def writeUnary(self, op):
         self.writer.write({'-': "neg", '~': "not"}[op] + '\n')

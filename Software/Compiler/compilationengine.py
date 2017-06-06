@@ -258,7 +258,7 @@ class CompilationEngine:
     def compileExpression(self):
         self.writeXML("<expression>")
         self.compileTerm()
-        while self.t.token in "+-*/&|~<>=":
+        while self.t.token in "+-*/%&|~<>=":
             op = self.t.token
             self.writeToken()
             self.compileTerm()

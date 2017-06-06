@@ -1,5 +1,5 @@
 class Tokenizer:
-    symbols = "{}()[].,;+-*/&|~<>="
+    symbols = "{}()[].,;+-*/%&|~<>="
     keywords = ["do", "if", "var", "int", "let", "null", "this", "else", "char", "true", "void", "class", "field", "false", "while", "static", "return", "method", "boolean", "function", "constructor"]
 
     def __init__(self, fileName):

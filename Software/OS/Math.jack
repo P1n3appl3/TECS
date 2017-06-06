@@ -115,6 +115,15 @@ class Math {
         return y;
     }
 
+    /** Returns the product of a%b.
+    *  When a Jack compiler detects the modulus operator '%' in the
+    *  program's code, it handles it by invoking this method. In other words,
+    *  the Jack expressions n%d and mod(n,d) return the same value.
+    */
+    function int mod(int a, int b){
+        return a - ((a / b) * b);
+    }
+
     /** Returns the greater number. */
     function int max(int a, int b) {
         if(a > b){
