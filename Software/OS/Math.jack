@@ -4,6 +4,7 @@
  */
 class Math {
     static Array mask;
+    static int seed; // For rand()
 
     /** Initializes the library. */
     function void init() {
@@ -84,7 +85,7 @@ class Math {
         while(~(n < d)){
             let a = d;
             let b = 1;
-            while((a + a) < n){
+            while((a < 16384) & ((a + a) < n)){
                 let a = a + a;
                 let b = b + b;
             }
@@ -116,10 +117,10 @@ class Math {
     }
 
     /** Returns the product of a%b.
-    *  When a Jack compiler detects the modulus operator '%' in the
-    *  program's code, it handles it by invoking this method. In other words,
-    *  the Jack expressions n%d and mod(n,d) return the same value.
-    */
+     *  When a Jack compiler detects the modulus operator '%' in the
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions n%d and mod(n,d) return the same value.
+     */
     function int mod(int a, int b){
         return a - ((a / b) * b);
     }
@@ -138,5 +139,34 @@ class Math {
             return a;
         }
         return b;
+    }
+
+    /** Seeds the pseudo-random number generator. */
+    function void seedRandom(int s){
+        let seed = s;
+        return;
+    }
+
+    /** Returns a pseudo-random positive integer in the range
+     *  [0, 32749). The upper bound is the largest prime smaller
+     *  than the MAX_INT of the HACK platform. The constants 19
+     *  and 1 are some constants experimentally verified to give
+     *  a decently irregular distribution. Note that due to the
+     *  nature of linear congruential generators, certain bits
+     *  of the result will be more "random" than others.
+     */
+    function int rand(){
+        var int temp;
+        let temp = ((seed * 19) + 1) % 32749;
+        let seed = temp;
+        return Math.abs(temp);
+    }
+
+    /** Returns a pseudo-random integer in range [min, max).
+     *  Warning: behavior is undefined if max <= min or either min
+     *  or max are negative
+     */
+    function int randRange(int min, int max){
+        return (Math.rand() % ((max - min) - 1)) + min;
     }
 }
