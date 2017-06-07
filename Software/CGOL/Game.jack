@@ -4,9 +4,17 @@ class Game {
     field int x, y;
 
     constructor Game new(int s){
+        var int i;
         let board = Board.new(s);
         let x = board.getWidth()/2;
         let y = board.getHeight()/2;
+        let i = x * y;
+        while(i > 0){
+            do board.set((Math.rand() % (board.getWidth() * 2)) / 2, (Math.rand() % (board.getHeight() * 2)) / 2, true);
+            let i = i - 1;
+        }
+        do board.flip();
+        do board.draw();
         let running = false;
         return this;
     }

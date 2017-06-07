@@ -43,17 +43,16 @@ class Screen {
 
     /** Draws the (x,y) pixel, using the current color. */
     function void drawPixel(int x, int y) {
-        var int temp, mod;
+        var int temp;
         if((x > 511) | (x < 0) | (y > 255) | (y < 0)){
             do Sys.error(7);
         }
         let temp = 16384 + (y * 32) + (x / 16);
-        let mod = x - ((x / 16) * 16);
         if(color){
-            do Memory.poke(temp, Memory.peek(temp) | mask[mod]);
+            do Memory.poke(temp, Memory.peek(temp) | mask[x % 16]);
         }
         else{
-            do Memory.poke(temp, Memory.peek(temp) & ~mask[mod]);
+            do Memory.poke(temp, Memory.peek(temp) & ~mask[x % 16]);
         }
         return;
     }

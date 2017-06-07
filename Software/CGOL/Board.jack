@@ -167,8 +167,8 @@ class Board {
    }
 
    method void dispose(){
-       do Util.dispose2DArray(matrix, width);
-       do Util.dispose2DArray(next, width);
+       do dispose2DArray(matrix, width);
+       do dispose2DArray(next, width);
        return;
    }
 }

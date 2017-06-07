@@ -66,3 +66,8 @@ options:
 - ROM32K(address= ,out= );
 - Screen(in= ,load= ,address= ,out= );
 - Xor(a= ,b= ,out= );
+
+# Project 13
+A list of all additions and modifications made outside the domain of the course.
+- Add modulus functionality to jack with Math.mod() and make the compiler properly interpret the % symbol
+- Add pseudo-random number generation to jack (via a linear congruential generator) with Math.seedRandom(), Math.rand(), and Math.randRange()

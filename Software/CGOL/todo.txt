@@ -1,9 +1,7 @@
-Pause/play/clear
 Change speed
 Change board size
 Grid on/off
 Save/load state
-Random fill
 Predetermined structures (spell out nand2tetris or tecs, golly ticker, glider circles, space ship, glider gun)
 Splash screen/menu
 Optimize cursor drawing by refilling instead of redrawing board

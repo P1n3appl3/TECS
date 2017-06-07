@@ -2,7 +2,14 @@ class Main {
 
     function void main(){
         var Game g;
-
+        var int i;
+        do Output.moveCursor(12, 25);
+        do Output.printString("Press a key...");
+        let i = 0;
+        while(Keyboard.keyPressed() = 0){
+            let i = i - 1;
+        }
+        do Math.seedRandom(i % Keyboard.keyPressed());
         let g = Game.new(20);
         do g.run();
         return;
