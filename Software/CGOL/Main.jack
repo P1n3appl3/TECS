@@ -6,7 +6,7 @@ class Main {
         do Output.moveCursor(12, 25);
         do Output.printString("Press a key...");
         let i = 0;
-        while(Keyboard.keyPressed() = 0){
+        while(Keyboard.keyPressed() == 0){
             let i = i - 1;
         }
         do Math.seedRandom(i % Keyboard.keyPressed());

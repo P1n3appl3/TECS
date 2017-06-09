@@ -4,19 +4,19 @@ class Board {
 
     constructor Board new(int s){
         var int i;
-        let width = 512/s;
-        let x = (512-(width*s)) / 2; //marginally faster than calling Math.mod()
+        let width = 512 / s;
+        let x = (512 - (width * s)) / 2; //marginally faster than calling Math.mod()
         let height = 256/s;
-        let y = (256-(height*s)) / 2;
+        let y = (256 - (height * s)) / 2;
         let i = 0;
         let size = s;
         do graphicsInit();
         let matrix = Array.new(width);
         let next = Array.new(width);
-        while(i<width){
+        while(i < width){
             let matrix[i] = Array.new(height);
             let next[i] = Array.new(height);
-            let i = i+1;
+            let i = i + 1;
         }
         return this;
     }
@@ -59,14 +59,14 @@ class Board {
         var int neighbors, i, iup, idown, j, jup, jdown;
         let i = 0;
         let j = 0;
-        while(i<width){
-            while(j<height){
+        while(i < width){
+            while(j < height){
                 // inline the neighbor checks and mod computations because it's faster than a loop
                 let neighbors = 0;
-                let iup = Math.mod(i+1+width, width);
-                let idown = Math.mod(i-1+width, width);
-                let jup = Math.mod(j+1+height, height);
-                let jdown = Math.mod(j-1+height, height);
+                let iup = Math.mod(i + 1 + width, width);
+                let idown = Math.mod(i - 1 + width, width);
+                let jup = Math.mod(j + 1 + height, height);
+                let jdown = Math.mod(j - 1 + height, height);
                 // using weakly typed true == -1
                 let neighbors = neighbors - get(iup, jup);
                 let neighbors = neighbors - get(iup, j);
@@ -77,19 +77,19 @@ class Board {
                 let neighbors = neighbors - get(idown, j);
                 let neighbors = neighbors - get(idown, jdown);
                 if(get(i,j)){
-                    if((neighbors<2) | (neighbors>3)){
+                    if((neighbors < 2) | (neighbors > 3)){
                         do set(i, j, false);
                     }
                 }
                 else{
-                    if(neighbors = 3){
+                    if(neighbors == 3){
                         do set(i, j, true);
                     }
                 }
-                let j = j+1;
+                let j = j + 1;
             }
             let j = 0;
-            let i = i+1;
+            let i = i + 1;
         }
         return;
     }
@@ -100,30 +100,29 @@ class Board {
         var Array temp, tempNext;
         let i = 0;
         let j = 0;
-        while(i<width){
+        while(i < width){
             let temp = matrix[i];
             let tempNext = next[i];
-            while(j<height){
+            while(j < height){
                 let temp[j] = tempNext[j];
-                //let tempNext[j] = 0;
-                let j = j+1;
+                let j = j + 1;
             }
             let j = 0;
-            let i = i+1;
+            let i = i + 1;
         }
         return;
     }
 
     method void clear(){
         var int i, j;
-        let i=0;
-        let j=0;
-        while(j<height){
-            while(i<width){
+        let i = 0;
+        let j = 0;
+        while(j < height){
+            while(i < width){
                 do set(i, j, false);
-                let i = i+1;
+                let i = i + 1;
             }
-            let j = j+1;
+            let j = j + 1;
             let i = 0;
         }
         do flip();
@@ -135,22 +134,22 @@ class Board {
        do Screen.setColor(true);
        do Screen.drawRectangle(0, 0, 511, 255);
        do Screen.setColor(false);
-       do Screen.drawRectangle(x, y, x+(width*size)-1, y+(height*size)-1);
+       do Screen.drawRectangle(x, y, x + (width * size) - 1, y + (height * size) - 1);
        return;
    }
 
    method void draw(){
        var int i, j, temp;
-       let i=0;
-       let j=0;
-       while(j<height){
-           while(i<width){
+       let i = 0;
+       let j = 0;
+       while(j < height){
+           while(i < width){
                let temp = matrix[i];
                do Screen.setColor(temp[j]);
-               do Screen.drawRectangle(x+(i*size), y+(j*size), x+((i+1)*size)-1, y+((j+1)*size)-1);
-               let i = i+1;
+               do Screen.drawRectangle(x + (i * size), y + (j * size), x + ((i + 1) * size) - 1, y + ((j + 1) * size) - 1);
+               let i = i + 1;
            }
-           let j = j+1;
+           let j = j + 1;
            let i = 0;
        }
        return;
@@ -169,6 +168,7 @@ class Board {
    method void dispose(){
        do dispose2DArray(matrix, width);
        do dispose2DArray(next, width);
+       do Memory.deAlloc(this);
        return;
    }
 }
