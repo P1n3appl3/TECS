@@ -72,3 +72,4 @@ options:
 - Add modulus functionality to jack with Math.mod() and make the compiler properly interpret the % symbol
 - Add pseudo-random number generation to jack (via a linear congruential generator) with Math.seedRandom(), Math.rand(), and Math.randRange()
 - Add >=, <=, ~=, and == to the legal jack comparisons (the latter is equivalent to '=')
+- Add break statements for while loops

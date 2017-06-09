@@ -1,6 +1,6 @@
 class Tokenizer:
     symbols = "{}()[].,;+-*/%&|~<>="
-    keywords = ["do", "if", "var", "int", "let", "null", "this", "else", "char", "true", "void", "class", "field", "false", "while", "static", "return", "method", "boolean", "function", "constructor"]
+    keywords = ["do", "if", "var", "int", "let", "null", "this", "else", "char", "true", "void", "class", "field", "false", "while", "static", "return", "method", "boolean", "function", "constructor", "break"]
 
     def __init__(self, fileName):
         self.reader = open(fileName)

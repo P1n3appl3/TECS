@@ -15,6 +15,7 @@ class CompilationEngine:
         self.table = None
         self.classTable = SymbolTable()
         self.fieldCount = 0
+        self.currentWhile = []
 
     def writeXML(self, s):
         if '-x' in sys.argv:
@@ -123,6 +124,8 @@ class CompilationEngine:
                 self.compileWhile()
             elif self.t.token == 'return':
                 self.compileReturn()
+            elif self.t.token == 'break':
+                self.compileReturn()
         self.writeXML("</statements>")
 
     def compileDo(self):
@@ -131,9 +134,15 @@ class CompilationEngine:
         name = self.t.token
         self.writeToken()
         self.compileCall(name)
-        self.writeToken()
         self.vm.writePop("temp", 0)
+        self.writeToken()
         self.writeXML("</doStatement>")
+
+    def compileBreak(self):
+        self.writeXML("<breakStatement>")
+        self.vm.writeGoto("WHILE_END" + str(self.currentWhile[-1]))
+        self.writeToken(2)
+        self.writeXML("</breakStatement>")
 
     def compileLet(self):
         self.writeXML("<letStatement>")
@@ -160,19 +169,20 @@ class CompilationEngine:
         self.writeXML("</letStatement>")
 
     def compileWhile(self):
-        currentCount = self.whileCount
+        self.currentWhile.append(self.whileCount)
         self.whileCount += 1
         self.writeXML("<whileStatement>")
         self.writeToken(2)
-        self.vm.writeLabel("WHILE_EXP" + str(currentCount))
+        self.vm.writeLabel("WHILE_EXP" + str(self.currentWhile[-1]))
         self.compileExpression()
         self.vm.writeUnary('~')
-        self.vm.writeIf("WHILE_END" + str(currentCount))
+        self.vm.writeIf("WHILE_END" + str(self.currentWhile[-1]))
         self.writeToken(2)
         self.compileStatements()
-        self.vm.writeGoto("WHILE_EXP" + str(currentCount))
+        self.vm.writeGoto("WHILE_EXP" + str(self.currentWhile[-1]))
         self.writeToken()
-        self.vm.writeLabel("WHILE_END" + str(currentCount))
+        self.vm.writeLabel("WHILE_END" + str(self.currentWhile[-1]))
+        del(self.currentWhile[-1])
         self.writeXML("</whileStatement>")
 
     def compileIf(self):
