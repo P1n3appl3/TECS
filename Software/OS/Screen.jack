@@ -82,7 +82,7 @@ class Screen {
             return;
         }
         let dy = y2 - y1;
-        if(dy = 0){
+        if(dy == 0){
             do Screen.drawRectangle(x1, y1, x2, y2);
             return;
         }
@@ -156,14 +156,14 @@ class Screen {
                 do Screen.drawCollumn(16384 + (y1 * 32) + left, 1 + y2 - y1, -1);
             }
             let side = 0;
-            while(modx2 > -1){
+            while(modx2 >= 0){
                 let side = side + mask[modx2];
                 let modx2 = modx2 - 1;
             }
             do Screen.drawCollumn(16384 + (y1 * 32) + right, 1 + y2 - y1, side);
         }
         else{
-            while(~(modx1 > modx2)){
+            while(modx1 <= modx2){
                 let side = side + mask[modx1];
                 let modx1 = modx1 + 1;
             }
@@ -178,11 +178,11 @@ class Screen {
         if((x > 511) | (x < 0) | (y > 255) | (y < 0)){
             do Sys.error(12);
         }
-        if((x + r > 511) | (x - r < 0) | (y + r > 255) | (y - r < 0)){
+        if(((x + r) > 511) | ((x - r) < 0) | ((y + r) > 255) | ((y - r) < 0)){
             do Sys.error(13);
         }
         let i = -r;
-        while(~(i > r)){
+        while(i <= r){
             let temp = Math.sqrt((r * r) - (i * i));
             do Screen.drawLine(x - temp, y + i, x + temp, y + i);
             let i = i + 1;

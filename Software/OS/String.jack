@@ -55,7 +55,7 @@ class String {
 
     /** Appends c to this string's end and returns this string. */
     method String appendChar(char c) {
-        if(len = maxLen){
+        if(len == maxLen){
             do Sys.error(17);
         }
         let contents[len] = c;
@@ -65,7 +65,7 @@ class String {
 
     /** Erases the last character from this string. */
     method void eraseLastChar() {
-        if(len = 0){
+        if(len == 0){
             do Sys.error(18);
         }
         let len = len - 1;
@@ -90,7 +90,7 @@ class String {
          let i = 0;
          let temp = 0;
          let negative = false;
-         if(contents[0] = 45){   //minus sign
+         if(contents[0] == 45){   //minus sign
              let negative = true;
              let i = 1;
          }
@@ -117,7 +117,7 @@ class String {
     method void setInt(int val) {
         var int temp, n;
         let len = 0;
-        if(val = 0){
+        if(val == 0){
             let contents[0] = 48;
             let len = 1;
             return;
@@ -134,7 +134,7 @@ class String {
             let temp = temp / 10;
         }
         while(temp > 0){
-            if(len = maxLen){
+            if(len == maxLen){
                 do Sys.error(19);
             }
             let n = val / temp;

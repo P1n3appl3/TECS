@@ -215,18 +215,18 @@ class Output {
         var Array temp, mem;
         var int i, j, pos;
         var boolean left;
-        if(c = 128){
+        if(c == 128){
             do Output.println();
             return;
         }
-        if(c = 129){
+        if(c == 129){
             do Output.backSpace();
             return;
         }
         let temp = Output.getMap(c);
         let left = true;
         let i = x / 2;
-        if((i + i) = x){ // only needs <<8 if it's the left half of the word
+        if((i + i) == x){ // only needs <<8 if it's the left half of the word
             let left = false;
         }
         let mem = 0;

@@ -55,9 +55,9 @@ class Keyboard {
         do Output.printChar(95);    //underscore
         while(Keyboard.keyPressed() = 0){}
         let key = Keyboard.keyPressed();
-        while(~(Keyboard.keyPressed() = 0)){}
+        while(Keyboard.keyPressed() ~= 0){}
         do Output.backSpace();
-        if(~(key = 129)){   //backspace
+        if(key ~= 129){   //backspace
             do Output.printChar(key);
         }
         return key;
@@ -75,7 +75,7 @@ class Keyboard {
         let pos = 0;
         let temp = 129;
         do Output.printString(message);
-        while(~(temp = 128)){   //enter
+        while(temp ~= 128){   //enter
             if(temp = 129){     //backspace
                 if(pos > 0){
                     do Output.backSpace();

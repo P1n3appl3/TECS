@@ -25,6 +25,10 @@ class Tokenizer:
         self.tokenType = "symbol"
         self.token = self.line[0]
         self.line = self.line[1:]
+        if len(self.line) > 0 and self.token in "~<>=" and self.line[0] == '=':
+            self.token += self.line[0]
+            self.line = self.line[1:]
+
 
     def parseKeyword(self):
         for i in range(2, max(len(self.line), 11)):

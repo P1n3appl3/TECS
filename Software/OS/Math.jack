@@ -49,7 +49,7 @@ class Math {
         let y = Math.abs(y);
         let shiftedX = x;
         while(i < 16){
-            if(~((mask[i] & y) = 0)){
+            if((mask[i] & y) ~= 0){
                 let sum = sum + shiftedX;
             }
             let shiftedX = shiftedX + shiftedX;
@@ -69,7 +69,7 @@ class Math {
     function int divide(int n, int d){
         var int result, a, b;
         var boolean negative;
-        if(d = 0){
+        if(d == 0){
             do Sys.error(3);
         }
         let negative = false;
@@ -82,7 +82,7 @@ class Math {
         let n = Math.abs(n);
         let d = Math.abs(d);
         let result = 0;
-        while(~(n < d)){
+        while(n >= d){
             let a = d;
             let b = 1;
             while((a < 16384) & ((a + a) < n)){
@@ -106,9 +106,9 @@ class Math {
         }
         let i = 7;
         let y = 0;
-        while(i > -1){
+        while(i >= 0){
             let temp = (y + mask[i]) * (y + mask[i]);
-            if(((temp < x) | (temp = x)) & (temp > 0)){
+            if(((temp < x) | (temp == x)) & (temp > 0)){
                 let y = y + mask[i];
             }
             let i = i - 1;
